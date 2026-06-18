@@ -25,7 +25,7 @@ export default function Navbar() {
     const user = null; // Replace with Better Auth session later
 
     return (
-        <header className="sticky top-0 z-50 border-b bg-base-100/80 backdrop-blur-xl">
+        <header className="container mx-auto sticky top-0 z-200 border-b bg-base-100/80 backdrop-blur-xl">
             <div className="container mx-auto flex h-20 items-center justify-between px-4">
 
                 <Logo/>

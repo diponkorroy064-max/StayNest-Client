@@ -3,8 +3,8 @@ import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn, FaHeart} from "react
 
 export default function Footer() {
     return (
-        <footer className="bg-[#0F172A] text-gray-300">
-            <div className="container mx-auto px-6 py-14">
+        <footer className="container mx-auto bg-[#0F172A] text-gray-300">
+            <div className="px-6 py-14">
                 <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
                     {/* Logo & About */}
                     <div>
