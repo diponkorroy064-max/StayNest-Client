@@ -6,7 +6,7 @@ export default async function FeaturedProperties() {
     const allProperties = await getPropertiesData();
     // console.log("all Pro in featured", allProperties);
     const properties = allProperties.slice(0, 6);
-    console.log("proData in featured", properties);
+    // console.log("proData in featured", properties);
 
     return (
         <section className="py-20 bg-base-200">

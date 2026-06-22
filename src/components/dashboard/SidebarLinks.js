@@ -24,7 +24,7 @@ export const sidebarLinks = {
         },
         {
             name: "Profile",
-            href: "/dashboard/tenant/my-profile",
+            href: "/dashboard/tenant/profile",
             icon: User,
         },
     ],

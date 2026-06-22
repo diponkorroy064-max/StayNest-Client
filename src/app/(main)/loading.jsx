@@ -3,8 +3,8 @@ import { HashLoader } from 'react-spinners';
 
 const loading = () => {
     return (
-        <div>
-            <HashLoader />
+        <div className='container mx-auto min-h-200'>
+            <HashLoader className='mx-auto flex items-center'/>
         </div>
     );
 };
