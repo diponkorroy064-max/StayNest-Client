@@ -8,6 +8,7 @@ import {
     Bath,
     Maximize,
 } from "lucide-react";
+import Link from "next/link";
 
 
 export default function PropertyCard({ property }) {
@@ -56,12 +57,12 @@ export default function PropertyCard({ property }) {
 
                     <span className="flex items-center gap-1">
                         <Bath size={18} />
-                        {property.bathrooms} Baths
+                        {property?.bathrooms} Baths
                     </span>
 
                     <span className="flex items-center gap-1">
                         <Maximize size={18} />
-                        {property.size} sqft
+                        {property?.size} sqft
                     </span>
 
                 </div>
@@ -75,9 +76,9 @@ export default function PropertyCard({ property }) {
                         </span>
                     </h2>
 
-                    <button className="btn btn-primary">
+                    <Link href={`/allProperties/${property?._id}`}><button className="btn btn-primary">
                         Details
-                    </button>
+                    </button></Link>
 
                 </div>
 

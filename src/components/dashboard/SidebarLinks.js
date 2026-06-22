@@ -42,12 +42,12 @@ export const sidebarLinks = {
         },
         {
             name: "My Properties",
-            href: "/dashboard/owner/my-properties",
+            href: "/dashboard/owner/myProperties",
             icon: Home,
         },
         {
             name: "Requests",
-            href: "/dashboard/owner/requests",
+            href: "/dashboard/owner/booking-requests",
             icon: ClipboardList,
         },
         {
