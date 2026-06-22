@@ -9,7 +9,11 @@ import {
     Maximize,
 } from "lucide-react";
 
+
 export default function PropertyCard({ property }) {
+    // const properties = property;
+    // console.log("property from propertyCard", properties);
+
     return (
         <motion.div
             whileHover={{ y: -10 }}
@@ -19,15 +23,15 @@ export default function PropertyCard({ property }) {
             <div className="relative">
 
                 <Image
-                    src={property.image}
-                    alt={property.title}
+                    src={property?.images?.[0] || "/placeholder.jpg"}
+                    alt={property?.title}
                     width={500}
                     height={350}
                     className="w-full h-64 object-cover"
                 />
 
                 <span className="absolute top-4 left-4 badge badge-primary badge-lg">
-                    {property.category}
+                    {property?.propertyType}
                 </span>
 
             </div>
@@ -65,7 +69,7 @@ export default function PropertyCard({ property }) {
                 <div className="flex justify-between items-center mt-8">
 
                     <h2 className="text-3xl font-bold text-primary">
-                        ৳ {property.rent}
+                        ৳ {property.rentAmount}
                         <span className="text-base font-normal">
                             /month
                         </span>

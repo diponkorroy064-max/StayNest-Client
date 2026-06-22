@@ -7,14 +7,15 @@ import { FcGoogle } from 'react-icons/fc';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { authClient } from '@/lib/auth-client';
 
 
 const SignInPage = () => {
     const [isShowPass, setIsShowPass] = useState(false);
 
-    const searchParams = useSearchParams();
-    const redirectTo = searchParams.get("redirect") || "/";
-    console.log("Redirect after sign in:", redirectTo);
+    // const searchParams = useSearchParams();
+    // const redirectTo = searchParams.get("redirect") || "/";
+    // console.log("Redirect after sign in:", redirectTo);
 
     const router = useRouter();
 
@@ -22,22 +23,23 @@ const SignInPage = () => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const user = Object.fromEntries(formData.entries());
-        console.log(user);
+        // console.log(user);
 
-        // const { data, error } = await authClient.signIn.email({
-        //     email: user.email,
-        //     password: user.password,
-        //     rememberMe: true,
-        // });
-        // console.log("sign in response", data, error);
+        const { data, error } = await authClient.signIn.email({
+            email: user.email,
+            password: user.password,
+            rememberMe: true,
+        });
+        // console.log("login in response", data, error);
 
-        // if (error) {
-        //     toast.error("Sign In failed ." + error.message);
-        // }
-        // else if (data) {
-        //     toast.success("Signed In successfull!")
-        //     router.push(redirectTo);
-        // }
+        if (error) {
+            toast.error("login In failed ." + error.message);
+        }
+        else if (data) {
+            toast.success("Signed In successfull!")
+            // router.push(redirectTo);
+            router.push("/");
+        }
     }
 
 
@@ -155,8 +157,7 @@ const SignInPage = () => {
 
                     <Button
                         onClick={handleSigninGoogle}
-                        className="w-full rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-100"
-                    >
+                        className="w-full rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-100">
                         <FcGoogle />
                         Continue with Google
                     </Button>
@@ -165,8 +166,7 @@ const SignInPage = () => {
                         Do not have an account?
                         <Link
                             className="text-pink-500 font-bold ml-1 hover:text-pink-600"
-                            href={`/signup?redirect=${redirectTo}`}
-                        >
+                            href={`/register`}>
                             Sign Up
                         </Link>
                     </h2>

@@ -8,7 +8,7 @@ export default function Footer() {
                 <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
                     {/* Logo & About */}
                     <div>
-                        <h2 className="text-3xl font-bold text-[#f58f95]">
+                        <h2 className="text-3xl font-bold text-[#2d20ef]">
                             StayNest
                         </h2>
 

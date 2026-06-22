@@ -8,42 +8,47 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { Radio, RadioGroup } from "@heroui/react";
+import { authClient } from '@/lib/auth-client';
 
 
 const RegisterPage = () => {
     const [isShowPass, setIsShowPass] = useState(false);
     const router = useRouter();
-    const [role, setRole] = useState("seeker");
 
-    const searchParams = useSearchParams();
-    const redirectTo = searchParams.get("redirect") || "/";
+    // const searchParams = useSearchParams();
+    // const redirectTo = searchParams.get("redirect") || "/";
 
     const onSubmit = async (e) => {
         e.preventDefault();
 
         const formData = new FormData(e.currentTarget);
         const user = Object.fromEntries(formData.entries());
-        console.log(user);
+        console.log("user from register", user);
 
-        const plan = role === "seeker" ? "seeker_free" : "recruiter_free";
+        // const plan = role === "tenant" ? "tenant_free" : "owner_free";
 
-        // const { data, error } = await authClient.signUp.email({
-        //     name: user.name,
-        //     image: user.image,
-        //     email: user.email,
-        //     password: user.password,
-        //     role: user.role,
-        //     plan: plan
-        // });
-        // console.log("sign up response", data, error);
+        if (user.password !== user.confirmPassword) {
+            toast.error("Passwords do not match");
+            return;
+        }
 
-        // if (error) {
-        //     toast.error("Sign up failed " + error.message);
-        // }
-        // else if (data) {
-        //     toast.success("Sign up successfull! Verify your Email...");
-        //     router.push(redirectTo);
-        // }
+        const { data, error } = await authClient.signUp.email({
+            name: user.name,
+            image: user.image,
+            email: user.email,
+            password: user.password,
+            role: user.role
+        });
+        // console.log("register response", data, error);
+
+        if (error) {
+            toast.error("Register failed " + error.message);
+        }
+        else if (data) {
+            toast.success("Register successfull! Verify your Email...");
+            // router.push(redirectTo);
+            router.push("/login");
+        }
     }
 
     const handleSigninGoogle = async () => {
@@ -141,28 +146,32 @@ const RegisterPage = () => {
                             Account Type
                         </Label>
 
-                        <RadioGroup defaultValue="seeker" name="role" orientation="horizontal">
-                            <Radio value="Tenant">
+                        <RadioGroup
+                            name="role"
+                            defaultValue="tenant"
+                            orientation="horizontal"
+                            className="flex gap-6">
+                            <Radio
+                                value="tenant"
+                                className="flex flex-row items-center gap-2">
                                 <Radio.Control>
                                     <Radio.Indicator />
                                 </Radio.Control>
 
-                                <Radio.Content>
-                                    <Label className="text-gray-700">
-                                        Tenant
-                                    </Label>
+                                <Radio.Content className="flex items-center">
+                                    <Label>Tenant</Label>
                                 </Radio.Content>
                             </Radio>
 
-                            <Radio value="Owner">
+                            <Radio
+                                value="owner"
+                                className="flex flex-row items-center gap-2">
                                 <Radio.Control>
                                     <Radio.Indicator />
                                 </Radio.Control>
 
-                                <Radio.Content>
-                                    <Label className="text-gray-700">
-                                        Owner
-                                    </Label>
+                                <Radio.Content className="flex items-center">
+                                    <Label>Owner</Label>
                                 </Radio.Content>
                             </Radio>
                         </RadioGroup>
@@ -198,7 +207,7 @@ const RegisterPage = () => {
 
                     <h2 className="text-center text-gray-800">
                         Already have an account?
-                        <Link href={`/signin?redirect=${redirectTo}`} className="ml-2 text-blue-500 font-bold hover:text-blue-300">
+                        <Link href={`/login`} className="ml-2 text-blue-500 font-bold hover:text-blue-300">
                             Sign In
                         </Link>
                     </h2>

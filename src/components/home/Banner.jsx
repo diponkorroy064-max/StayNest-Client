@@ -24,8 +24,7 @@ export default function Banner() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: .5 }}
-                        className="inline-block bg-primary text-white px-5 py-2 rounded-full font-medium"
-                    >
+                        className="inline-block bg-primary text-white px-5 py-2 rounded-full font-medium">
                         🏡 Trusted Rental Marketplace
                     </motion.span>
 
@@ -46,8 +45,7 @@ export default function Banner() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: .5 }}
-                        className="text-gray-200 text-lg mt-6 max-w-2xl mx-auto leading-8"
-                    >
+                        className="text-gray-200 text-lg mt-6 max-w-2xl mx-auto leading-8">
                         Browse verified apartments, houses, villas and commercial
                         properties across Bangladesh. Rent confidently from trusted
                         property owners.
@@ -58,14 +56,9 @@ export default function Banner() {
                         initial={{ opacity: 0, y: 40 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: .8 }}
-                        className="bg-white rounded-2xl p-4 mt-10 shadow-2xl"
-                    >
+                        className="bg-white rounded-2xl p-4 mt-10 shadow-2xl">
                         <div className="grid lg:grid-cols-4 gap-4">
-                            <input
-                                type="text"
-                                placeholder="Location"
-                                className="input input-bordered w-full"
-                            />
+                            <input type="text" placeholder="Location" className="input input-bordered w-full"/>
 
                             <select className="select select-bordered w-full">
                                 <option>Property Type</option>
@@ -109,8 +102,7 @@ export default function Banner() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 1.2 }}
-                        className="grid grid-cols-3 gap-10 mt-14 max-w-xl mx-auto"
-                    >
+                        className="grid grid-cols-3 gap-10 mt-14 max-w-xl mx-auto">
                         <div>
                             <h2 className="text-4xl font-bold text-white">10K+</h2>
                             <p className="text-gray-300 mt-2">Properties</p>
