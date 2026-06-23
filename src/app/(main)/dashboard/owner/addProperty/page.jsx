@@ -1,11 +1,11 @@
 import AddPropertyForm from "@/components/owner/AddPropertyForm";
 import React from "react";
 
-
 export const metadata = {
     title: "List Property | Owner Dashboard",
     description: "Register and queue new properties into tracking platforms",
 };
+
 
 export default function AddPropertyPage() {
     return (
@@ -27,3 +27,4 @@ export default function AddPropertyPage() {
         </div>
     );
 }
+

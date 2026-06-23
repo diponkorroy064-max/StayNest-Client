@@ -2,42 +2,59 @@
 import React, { useEffect, useState } from "react";
 import { BarChart3, Wallet, Users, Home, TrendingUp, ArrowUpRight, DollarSign } from "lucide-react";
 import { toast } from "react-toastify";
-// import axios from "axios";
+import { useSession } from "@/lib/auth-client";
+import { getPropertyByEmail } from "@/lib/api/api";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+
+// const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
 export default function OwnerDashboardAnalytics() {
     const [analytics, setAnalytics] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // Static session identification matching our prior context mapping
-    const ownerEmail = "diponkor@example.com";
+    const data = useSession();
+    // console.log("data from owner home", data);
+    const user = data?.data?.user;
+    // console.log("user from owner home", user);
+    const ownerEmail = user?.email;
 
-    useEffect(() => {
-        const fetchAnalyticsData = async () => {
-            try {
-                setLoading(true);
-                const response = await axios.get(`${API_BASE_URL}/owner/analytics?email=${ownerEmail}`);
-                setAnalytics(response.data);
-            } catch (err) {
-                toast.error("Failed to load ecosystem metric summaries.");
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchAnalyticsData();
-    }, []);
-
-    if (loading) {
-        return (
-            <div className="min-h-screen bg-base-200 flex items-center justify-center">
-                <span className="loading loading-spinner loading-lg text-primary"></span>
-            </div>
-        );
+    const emailData = async () => {
+        const response = await getPropertyByEmail(ownerEmail);
+        // console.log("response", response);
+        return response;
     }
+    // emailData();
+    
+   
+
+
+    // useEffect(() => {
+    //     const fetchAnalyticsData = async () => {
+    //         try {
+    //             setLoading(true);
+    //             const response = await getPropertyByEmail(ownerEmail);
+    //             console.log("response", response);
+    //             setAnalytics(response);
+    //         } catch (err) {
+    //             toast.error("Failed to load ecosystem metric summaries.");
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
+    //     fetchAnalyticsData();
+    // }, []);
+
+
+    // if (loading) {
+    //     return (
+    //         <div className="min-h-screen bg-base-200 flex items-center justify-center">
+    //             <span className="loading loading-spinner loading-lg text-primary"></span>
+    //         </div>
+    //     );
+    // }
 
     // High performance defaults if response data has sparse fields
-    const stats = analytics || {
+    const stats = {
         totalRevenue: 4850,
         activeLeases: 3,
         totalProperties: 5,
@@ -184,7 +201,7 @@ export default function OwnerDashboardAnalytics() {
                                                 <div className="font-extrabold">{req.tenantName}</div>
                                                 <div className="text-xs text-neutral-400 font-semibold">{req.tenantEmail}</div>
                                             </td>
-                                            <td className="font-bold max-w-[200px] truncate">{req.title}</td>
+                                            <td className="font-bold max-w-50 truncate">{req.title}</td>
                                             <td>{req.moveInDate}</td>
                                             <td className="font-black text-primary">${req.rentAmount}</td>
                                             <td>
@@ -204,3 +221,5 @@ export default function OwnerDashboardAnalytics() {
         </div>
     );
 }
+
+

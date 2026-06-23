@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { Home, MapPin, DollarSign, BedDouble, Bath, Maximize, Image as ImageIcon, Settings, FileText, CheckCircle2, Plus, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
+import { useSession } from "@/lib/auth-client";
 
 
 export default function AddPropertyForm() {
@@ -15,7 +16,7 @@ export default function AddPropertyForm() {
     const propertyTypes = ["Apartment", "House", "Studio", "Villa"];
     const rentTypes = ["Daily", "Weekly", "Monthly"];
 
-    // Initialize React Hook Form
+    // Initialize React Hook Form---
     const { register, handleSubmit, control, reset, setValue, watch } = useForm({
         defaultValues: {
             title: "",
@@ -50,6 +51,10 @@ export default function AddPropertyForm() {
         }
     };
 
+    const session = useSession();
+    const user = session?.data?.user;
+    // console.log('user from addPropertyForm', user);
+
     const onSubmitForm = async (data) => {
         setLoading(false);
 
@@ -67,6 +72,7 @@ export default function AddPropertyForm() {
             amenities: data.amenities,
             extraFeatures: data.extraFeatures.filter(f => f.key && f.value),
             status: "Pending",
+            ownerEmail: user?.email
         };
         console.log(propertyData);
 
