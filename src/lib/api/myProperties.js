@@ -37,21 +37,9 @@
 //     return await request(`/reviews/${propertyId}`, { method: "GET" });
 // };
 
-// // 3. Post New Feedback Record
-// export const submitReview = async (reviewData) => {
-//     return await request("/reviews", {
-//         method: "POST",
-//         body: JSON.stringify(reviewData),
-//     });
-// };
 
-// // 4. Store Final Booking Pipeline Logs
-// export const saveBookingInfo = async (bookingData) => {
-//     return await request("/bookings", {
-//         method: "POST",
-//         body: JSON.stringify(bookingData),
-//     });
-// };
+
+
 
 // // 5. Sync Selection Registry Catalogs
 // export const addToFavorites = async (favoriteData) => {

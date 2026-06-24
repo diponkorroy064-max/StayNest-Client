@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-// import { addToFavorites, submitReview, getPropertyReviews, saveBookingInfo, getPropertyId } from "@/lib/api/api";
 import { Heart, MapPin, BedDouble, Bath, Maximize, MessageSquare } from "lucide-react";
 import { toast } from "react-toastify";
 import ReviewCard from "@/components/propertyDetails/ReviewCard";
@@ -11,6 +10,7 @@ import { getPropertyId } from "@/lib/api/properties";
 import { useSession } from "@/lib/auth-client";
 import Image from "next/image";
 import { addFavouriteProperty } from "@/lib/api/favourites";
+import { saveBookingInfo } from "@/lib/api/booking";
 
 
 export default function PropertyDetailsPrivatePage() {
@@ -71,30 +71,36 @@ export default function PropertyDetailsPrivatePage() {
 
 
     const handleBookingConfirmation = async (bookingDetails) => {
-        // try {
-        //     setProcessingBooking(true);
-        //     const structuralRecord = {
-        //         propertyId,
-        //         title: property.title,
-        //         rentAmount: property.rentAmount,
-        //         tenantName: currentUser.name,
-        //         tenantEmail: currentUser.email,
-        //         ...bookingDetails,
-        //         transactionId: "MOCK_TXN_" + Math.random().toString(36).substr(2, 9).toUpperCase(),
-        //         paymentStatus: "Paid"
-        //     };
+        // console.log('bookingDetails', bookingDetails);
 
-        //     await saveBookingInfo(structuralRecord);
-        //     setIsBookModalOpen(false);
-        //     toast.success("Lease secured perfectly!");
-        //     router.push("/dashboard/success");
-        // } catch (err) {
-        //     toast.error("Failed to store booking confirmation.");
-        // } finally {
-        //     setProcessingBooking(false);
-        // }
+        try {
+            setProcessingBooking(true);
+            const structuralRecord = {
+                propertyId,
+                title: property.title,
+                rentAmount: property.rentAmount,
+                tenantName: currentUser.name,
+                tenantEmail: currentUser.email,
+                ...bookingDetails,
+                transactionId: "MOCK_TXN_" + Math.random().toString(36).substr(2, 9).toUpperCase(),
+                paymentStatus: "Paid"
+            };
+            // console.log("structuralRecord", structuralRecord);
+
+            await saveBookingInfo(structuralRecord);
+            setIsBookModalOpen(false);
+            toast.success("Lease secured perfectly!");
+            router.push("/dashboard/tenant/success");
+        }
+        catch (err) {
+            toast.error("Failed to store booking confirmation.");
+        }
+        finally {
+            setProcessingBooking(false);
+        }
     };
 
+    
     const handleReviewSubmit = async (reviewFormData) => {
         // const contextDoc = {
         //     propertyId,
