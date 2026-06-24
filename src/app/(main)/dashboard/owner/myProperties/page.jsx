@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Edit, Trash2, Building2, MapPin, DollarSign, RefreshCw } from "lucide-react";
 import { toast } from "react-toastify";
-import { getPropertyByEmail } from "@/lib/api/api";
+import { getPropertyByEmail } from "@/lib/api/properties";
 // import axios from "axios";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";

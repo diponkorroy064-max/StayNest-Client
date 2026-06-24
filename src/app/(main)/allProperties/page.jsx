@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Search, SlidersHorizontal, RefreshCw, DollarSign } from "lucide-react";
 import { toast } from "react-toastify";
-import { getPropertiesData } from "@/lib/api/api";
+import { getPropertiesData } from "@/lib/api/properties";
 import PropertyCard from "@/components/home/PropertyCard";
 
 export default function AllPropertiesPage() {

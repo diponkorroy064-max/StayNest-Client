@@ -8,8 +8,8 @@ export const sidebarLinks = {
             icon: LayoutDashboard,
         },
         {
-            name: "Wishlist",
-            href: "/dashboard/tenant/wishlist",
+            name: "Favourites",
+            href: "/dashboard/tenant/Favourites",
             icon: Heart,
         },
         {

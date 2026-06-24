@@ -1,19 +1,26 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { addToFavorites, submitReview, getPropertyReviews, saveBookingInfo, getPropertyId } from "@/lib/api/api";
+// import { addToFavorites, submitReview, getPropertyReviews, saveBookingInfo, getPropertyId } from "@/lib/api/api";
 import { Heart, MapPin, BedDouble, Bath, Maximize, MessageSquare } from "lucide-react";
 import { toast } from "react-toastify";
 import ReviewCard from "@/components/propertyDetails/ReviewCard";
 import ReviewForm from "@/components/propertyDetails/ReviewForm";
 import BookingModal from "@/components/propertyDetails/BookingModal";
+import { getPropertyId } from "@/lib/api/properties";
+import { useSession } from "@/lib/auth-client";
+import Image from "next/image";
+import { addFavouriteProperty } from "@/lib/api/favourites";
 
 
 export default function PropertyDetailsPrivatePage() {
     const { propertyId } = useParams();
-    const router = useRouter();
+    // console.log("propertyId", propertyId);
 
-    const currentUser = { name: "Diponkor Roy", email: "diponkor@example.com" };
+    const router = useRouter();
+    const session = useSession();
+    const currentUser = session?.data?.user;
+    // console.log("currentUser", currentUser);
 
     const [property, setProperty] = useState(null);
     const [reviews, setReviews] = useState([]);
@@ -27,9 +34,9 @@ export default function PropertyDetailsPrivatePage() {
             try {
                 setLoading(true);
                 const propertyData = await getPropertyId(propertyId);
-                const reviewsData = await getPropertyReviews(propertyId);
+                // const reviewsData = await getPropertyReviews(propertyId);
                 setProperty(propertyData);
-                setReviews(reviewsData || []);
+                // setReviews(reviewsData || []);
             } catch (err) {
                 toast.error("Error matching file properties context configuration.");
             } finally {
@@ -39,60 +46,72 @@ export default function PropertyDetailsPrivatePage() {
         fetchAllData();
     }, [propertyId]);
 
-    const handleFavoriteRegistration = async () => {
+
+    const handleFavoriteRegistration = async (property) => {
+        const submitFavInfo = {
+            ...property,
+            propertyId,
+            currentUserEmail: currentUser?.email
+        }
+        console.log(submitFavInfo);
+
         try {
-            const res = await addToFavorites({ propertyId, userEmail: currentUser.email });
+            const res = await addFavouriteProperty(submitFavInfo);
             if (res.error || res.message) {
                 toast.info(res.message || res.error);
             } else {
-                toast.success("Successfully logged into your favorite catalog repository!");
+                toast.success("Successfully added into your favorite list");
             }
-        } catch (err) {
-            toast.error("Failed handling database serialization request.");
+        } 
+        catch (err) {
+            console.error(err);
+            toast.error(err.message);
         }
     };
 
-    const handleBookingConfirmation = async (bookingDetails) => {
-        try {
-            setProcessingBooking(true);
-            const structuralRecord = {
-                propertyId,
-                title: property.title,
-                rentAmount: property.rentAmount,
-                tenantName: currentUser.name,
-                tenantEmail: currentUser.email,
-                ...bookingDetails,
-                transactionId: "MOCK_TXN_" + Math.random().toString(36).substr(2, 9).toUpperCase(),
-                paymentStatus: "Paid"
-            };
 
-            await saveBookingInfo(structuralRecord);
-            setIsBookModalOpen(false);
-            toast.success("Lease secured perfectly!");
-            router.push("/dashboard/success");
-        } catch (err) {
-            toast.error("Failed to store booking confirmation.");
-        } finally {
-            setProcessingBooking(false);
-        }
+    const handleBookingConfirmation = async (bookingDetails) => {
+        // try {
+        //     setProcessingBooking(true);
+        //     const structuralRecord = {
+        //         propertyId,
+        //         title: property.title,
+        //         rentAmount: property.rentAmount,
+        //         tenantName: currentUser.name,
+        //         tenantEmail: currentUser.email,
+        //         ...bookingDetails,
+        //         transactionId: "MOCK_TXN_" + Math.random().toString(36).substr(2, 9).toUpperCase(),
+        //         paymentStatus: "Paid"
+        //     };
+
+        //     await saveBookingInfo(structuralRecord);
+        //     setIsBookModalOpen(false);
+        //     toast.success("Lease secured perfectly!");
+        //     router.push("/dashboard/success");
+        // } catch (err) {
+        //     toast.error("Failed to store booking confirmation.");
+        // } finally {
+        //     setProcessingBooking(false);
+        // }
     };
 
     const handleReviewSubmit = async (reviewFormData) => {
-        const contextDoc = {
-            propertyId,
-            name: currentUser.name,
-            email: currentUser.email,
-            ...reviewFormData
-        };
+        // const contextDoc = {
+        //     propertyId,
+        //     name: currentUser.name,
+        //     email: currentUser.email,
+        //     ...reviewFormData
+        // };
 
-        try {
-            await submitReview(contextDoc);
-            setReviews((prev) => [contextDoc, ...prev]);
-            toast.success("Review logged successfully!");
-        } catch (err) {
-            toast.error("Could not capture review entry transaction parameters.");
-        }
+        // try {
+        //     await submitReview(contextDoc);
+        //     setReviews((prev) => [contextDoc, ...prev]);
+        //     toast.success("Review logged successfully!");
+        // } catch (err) {
+        //     toast.error("Could not capture review entry transaction parameters.");
+        // }
     };
+
 
     if (loading) return <div className="min-h-screen flex items-center justify-center"><span className="loading loading-spinner loading-lg text-primary"></span></div>;
     if (!property) return null;
@@ -104,8 +123,9 @@ export default function PropertyDetailsPrivatePage() {
                 {/* Main Cover Showcase Header */}
                 <div className="card bg-base-100 overflow-hidden border border-base-300 shadow-xl rounded-3xl">
                     <figure className="h-96 relative w-full bg-neutral-900">
-                        <img src={property.images?.[0] || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&q=80"} alt={property.title} className="w-full h-full object-cover" />
-                        <button onClick={handleFavoriteRegistration} className="btn btn-circle btn-lg absolute top-4 right-4 bg-base-100/80 backdrop-blur border-none hover:bg-primary hover:text-white transition-colors text-error shadow-md">
+                        <Image height={500} width={500} src={property.images?.[0] || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6"} alt={property.title} className="w-full h-full object-cover" />
+
+                        <button onClick={()=>handleFavoriteRegistration(property)} className="btn btn-circle btn-lg absolute top-4 right-4 bg-base-100/80 backdrop-blur border-none hover:bg-primary hover:text-white transition-colors text-error shadow-md">
                             <Heart className="w-6 h-6 fill-current" />
                         </button>
                     </figure>
@@ -157,16 +177,15 @@ export default function PropertyDetailsPrivatePage() {
                 </div>
 
                 {/* Extracted Booking Flow System Modal Wrapper */}
-                <BookingModal
-                    isOpen={isBookModalOpen}
+                <BookingModal isOpen={isBookModalOpen}
                     onClose={() => setIsBookModalOpen(false)}
                     property={property}
                     currentUser={currentUser}
                     onConfirm={handleBookingConfirmation}
                     processing={processingBooking}
                 />
-
             </div>
         </div>
     );
 }
+

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { BarChart3, Wallet, Users, Home, TrendingUp, ArrowUpRight, DollarSign } from "lucide-react";
 import { toast } from "react-toastify";
 import { useSession } from "@/lib/auth-client";
-import { getPropertyByEmail } from "@/lib/api/api";
+import { getPropertyByEmail } from "@/lib/api/properties";
 
 
 // const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
@@ -24,8 +24,8 @@ export default function OwnerDashboardAnalytics() {
         return response;
     }
     // emailData();
-    
-   
+
+
 
 
     // useEffect(() => {

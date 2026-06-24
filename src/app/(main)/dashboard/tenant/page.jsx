@@ -149,7 +149,7 @@ export default function TenantDashboardHome() {
                                     <tbody>
                                         {data.recentBookings.map((booking) => (
                                             <tr key={booking._id} className="border-b border-base-200 font-medium">
-                                                <td className="font-extrabold max-w-[180px] truncate">{booking.title}</td>
+                                                <td className="font-extrabold max-w-45 truncate">{booking.title}</td>
                                                 <td className="text-neutral-500 font-semibold">{booking.moveInDate}</td>
                                                 <td className="font-black text-primary">${booking.rentAmount}</td>
                                                 <td>

@@ -74,7 +74,7 @@ export default function AddPropertyForm() {
             status: "Pending",
             ownerEmail: user?.email
         };
-        console.log(propertyData);
+        // console.log(propertyData);
 
         try {
             setLoading(true);

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Calendar, User, Phone, FileText, CreditCard, ShieldCheck } from "lucide-react";
 
 export default function BookingModal({ isOpen, onClose, property, currentUser, onConfirm, processing }) {
+    // console.log('property from modal', property);
+
     const [showPaymentView, setShowPaymentView] = useState(false);
     const [moveInDate, setMoveInDate] = useState("");
     const [contactNumber, setContactNumber] = useState("");
@@ -19,13 +21,11 @@ export default function BookingModal({ isOpen, onClose, property, currentUser, o
         onConfirm({ moveInDate, contactNumber, additionalNotes });
     };
 
+
     return (
         <div className="modal modal-open bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 fixed inset-0">
             <div className="modal-box bg-base-100 border border-base-300 rounded-3xl max-w-md p-6 relative shadow-2xl">
-                <button
-                    onClick={() => { onClose(); setShowPaymentView(false); }}
-                    className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 font-black"
-                >
+                <button onClick={() => { onClose(); setShowPaymentView(false)}} className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 font-black">
                     ✕
                 </button>
 
@@ -39,7 +39,7 @@ export default function BookingModal({ isOpen, onClose, property, currentUser, o
                         <div className="form-control">
                             <label className="label py-1"><span className="label-text font-bold text-neutral-500">User Info</span></label>
                             <div className="input input-bordered flex items-center gap-2 rounded-xl bg-base-200 font-bold text-sm select-none">
-                                <User className="w-4 h-4 text-neutral-400" /> {currentUser.name} ({currentUser.email})
+                                <User className="w-4 h-4 text-neutral-400"/> {currentUser.name} ({currentUser.email})
                             </div>
                         </div>
 
@@ -60,7 +60,7 @@ export default function BookingModal({ isOpen, onClose, property, currentUser, o
                             <label className="label py-1"><span className="label-text font-bold text-neutral-500">Additional Notes</span></label>
                             <div className="relative">
                                 <FileText className="w-4 h-4 text-neutral-400 absolute left-3 top-3" />
-                                <textarea placeholder="Specify any unique details..." value={additionalNotes} onChange={(e) => setAdditionalNotes(e.target.value)} className="textarea textarea-bordered w-full pl-9 rounded-xl min-h-[70px] focus:outline-primary font-medium" />
+                                <textarea placeholder="Specify any unique details..." value={additionalNotes} onChange={(e) => setAdditionalNotes(e.target.value)} className="textarea textarea-bordered w-full pl-9 rounded-xl min-h-17.5 focus:outline-primary font-medium"/>
                             </div>
                         </div>
 
@@ -78,7 +78,7 @@ export default function BookingModal({ isOpen, onClose, property, currentUser, o
                         <div className="bg-base-200 p-4 border border-base-300 rounded-2xl space-y-2 text-sm">
                             <div className="flex justify-between">
                                 <span className="text-neutral-400 font-bold">Property:</span>
-                                <span className="font-extrabold max-w-[200px] truncate">{property.title}</span>
+                                <span className="font-extrabold max-w-50 truncate">{property.title}</span>
                             </div>
                             <div className="flex justify-between">
                                 <span className="text-neutral-400 font-bold">Move-in target:</span>
@@ -105,7 +105,7 @@ export default function BookingModal({ isOpen, onClose, property, currentUser, o
                         </div>
 
                         <button type="submit" disabled={processing} className="btn btn-primary btn-block rounded-xl normal-case font-bold text-white shadow-md">
-                            {processing ? <span className="loading loading-spinner"></span> : `Confirm Payment of $${property.rentAmount}`}
+                            {processing ? <span className="loading loading-spinner"></span> :`Confirm Payment of $${property.rentAmount}`}
                         </button>
 
                         <div className="flex items-start gap-2 bg-base-200 p-3 rounded-xl text-[11px] text-neutral-500 leading-relaxed">
@@ -118,3 +118,4 @@ export default function BookingModal({ isOpen, onClose, property, currentUser, o
         </div>
     );
 }
+
