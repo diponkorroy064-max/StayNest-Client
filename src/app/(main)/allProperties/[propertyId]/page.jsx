@@ -11,6 +11,7 @@ import { useSession } from "@/lib/auth-client";
 import Image from "next/image";
 import { addFavouriteProperty } from "@/lib/api/favourites";
 import { saveBookingInfo } from "@/lib/api/booking";
+import { getPropertyReviews, submitReview } from "@/lib/api/review";
 
 
 export default function PropertyDetailsPrivatePage() {
@@ -34,9 +35,9 @@ export default function PropertyDetailsPrivatePage() {
             try {
                 setLoading(true);
                 const propertyData = await getPropertyId(propertyId);
-                // const reviewsData = await getPropertyReviews(propertyId);
+                const reviewsData = await getPropertyReviews(propertyId);
                 setProperty(propertyData);
-                // setReviews(reviewsData || []);
+                setReviews(reviewsData);
             } catch (err) {
                 toast.error("Error matching file properties context configuration.");
             } finally {
@@ -53,7 +54,7 @@ export default function PropertyDetailsPrivatePage() {
             propertyId,
             currentUserEmail: currentUser?.email
         }
-        console.log(submitFavInfo);
+        // console.log(submitFavInfo);
 
         try {
             const res = await addFavouriteProperty(submitFavInfo);
@@ -102,20 +103,24 @@ export default function PropertyDetailsPrivatePage() {
 
     
     const handleReviewSubmit = async (reviewFormData) => {
-        // const contextDoc = {
-        //     propertyId,
-        //     name: currentUser.name,
-        //     email: currentUser.email,
-        //     ...reviewFormData
-        // };
+        // console.log('reviewFormData', reviewFormData);
 
-        // try {
-        //     await submitReview(contextDoc);
-        //     setReviews((prev) => [contextDoc, ...prev]);
-        //     toast.success("Review logged successfully!");
-        // } catch (err) {
-        //     toast.error("Could not capture review entry transaction parameters.");
-        // }
+        const contextDoc = {
+            propertyId,
+            name: currentUser.name,
+            email: currentUser.email,
+            reviewDate: new Date().toLocaleDateString("en-US"),
+            ...reviewFormData,
+        };
+        // console.log('contextDoc', contextDoc);
+
+        try {
+            await submitReview(contextDoc);
+            setReviews((prev) => [contextDoc, ...prev]);
+            toast.success("Review logged successfully!");
+        } catch (err) {
+            toast.error("Already exiest your Review");
+        }
     };
 
 
@@ -143,6 +148,7 @@ export default function PropertyDetailsPrivatePage() {
                                 <h1 className="text-3xl font-black tracking-tight">{property.title}</h1>
                                 <p className="text-sm text-neutral-500 flex items-center gap-1.5 mt-1 font-medium"><MapPin className="w-4 h-4" /> {property.location}</p>
                             </div>
+                            
                             <div className="text-right">
                                 <p className="text-3xl font-black text-primary">${property.rentAmount}<span className="text-sm font-semibold text-neutral-400">/{property.rentType || "mo"}</span></p>
                                 <button onClick={() => setIsBookModalOpen(true)} className="btn btn-primary mt-3 px-8 rounded-xl font-bold normal-case shadow-md">Book Property Now</button>

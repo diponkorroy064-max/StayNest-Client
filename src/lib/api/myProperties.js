@@ -32,10 +32,7 @@
 //     return await request(`/properties/${id}`, { method: "GET" });
 // };
 
-// // 2. Fetch Review Collections
-// export const getPropertyReviews = async (propertyId) => {
-//     return await request(`/reviews/${propertyId}`, { method: "GET" });
-// };
+
 
 
 

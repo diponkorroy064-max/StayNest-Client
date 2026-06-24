@@ -5,7 +5,7 @@ export default function ReviewCard({ rev }) {
     return (
         <div className="bg-base-100 border border-base-300 p-5 rounded-2xl shadow-sm space-y-2">
             <div className="flex justify-between items-start">
-                <div>
+                <div className="flex gap-4 justify-start items-center">
                     <h4 className="font-extrabold text-sm">{rev.name}</h4>
                     <p className="text-xs text-neutral-400 font-semibold">
                         {rev.email} {rev.date && `• ${rev.date}`}
@@ -19,3 +19,4 @@ export default function ReviewCard({ rev }) {
         </div>
     );
 }
+

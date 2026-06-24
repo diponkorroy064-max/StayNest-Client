@@ -16,6 +16,7 @@ export const saveBookingInfo = async (bookingData) => {
 };
 
 
+// 2. Getting Email based Booking data---
 export const getBookingsByEmail = async (email) => {
     const res = await fetch(`${BASE_URL}/bookings/byEmail?email=${email}`);
 
@@ -25,4 +26,5 @@ export const getBookingsByEmail = async (email) => {
     }
     return data;
 };
+
 
