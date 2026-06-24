@@ -10,7 +10,7 @@ export const addFavouriteProperty = async (data) => {
     })
 
     if (!res.ok) {
-        throw new Error("Failed to add favourite property");
+        throw new Error("Property already exists in your favourites.");
     }
     return await res.json();
 }

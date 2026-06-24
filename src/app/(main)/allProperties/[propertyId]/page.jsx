@@ -57,12 +57,8 @@ export default function PropertyDetailsPrivatePage() {
         // console.log(submitFavInfo);
 
         try {
-            const res = await addFavouriteProperty(submitFavInfo);
-            if (res.error || res.message) {
-                toast.info(res.message || res.error);
-            } else {
-                toast.success("Successfully added into your favorite list");
-            }
+            await addFavouriteProperty(submitFavInfo);
+            toast.success("Successfully added to your favourite list.");
         } 
         catch (err) {
             console.error(err);
@@ -148,7 +144,7 @@ export default function PropertyDetailsPrivatePage() {
                                 <h1 className="text-3xl font-black tracking-tight">{property.title}</h1>
                                 <p className="text-sm text-neutral-500 flex items-center gap-1.5 mt-1 font-medium"><MapPin className="w-4 h-4" /> {property.location}</p>
                             </div>
-                            
+
                             <div className="text-right">
                                 <p className="text-3xl font-black text-primary">${property.rentAmount}<span className="text-sm font-semibold text-neutral-400">/{property.rentType || "mo"}</span></p>
                                 <button onClick={() => setIsBookModalOpen(true)} className="btn btn-primary mt-3 px-8 rounded-xl font-bold normal-case shadow-md">Book Property Now</button>

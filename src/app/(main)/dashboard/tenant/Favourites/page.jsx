@@ -34,7 +34,7 @@ export default function TenantFavoritesPage() {
         if (!currentUserEmail) return;
         fetchFavorites();
     }, [currentUserEmail]);
-    console.log(favourites);
+    // console.log(favourites);
 
 
     const handleRemove = async (favouriteId) => {
