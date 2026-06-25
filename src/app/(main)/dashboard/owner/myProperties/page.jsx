@@ -15,42 +15,32 @@ export default function OwnerPropertiesTable() {
     // console.log('session in owner my properties page', session);
     const currentOwnerEmail = session?.data?.user?.email;
 
-   
-    const fetchOwnerProperties = async () => {
-        if (!currentOwnerEmail) return;
-
-        try {
-            setLoading(true);
-            const data = await getPropertyByEmail(currentOwnerEmail);
-            // console.log('property data in owner my properties page', data);
-            setProperties(data);
-        } catch (err) {
-            toast.error(err.message || "Failed to load inventory assets.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
     useEffect(() => {
-        if (!currentOwnerEmail) return;
+        const fetchOwnerProperties = async () => {
+            if (!currentOwnerEmail) return;
 
+            try {
+                setLoading(true);
+                const data = await getPropertyByEmail(currentOwnerEmail);
+                // console.log('property data in owner my properties page', data);
+                setProperties(data);
+            } catch (err) {
+                toast.error(err.message || "Failed to load inventory assets.");
+            } finally {
+                setLoading(false);
+            }
+        };
+        
         fetchOwnerProperties();
     }, [currentOwnerEmail]);
 
+
     const handleDelete = async (id) => {
-        // if (!window.confirm("Are you sure you want to permanently delete this property listing?")) return;
-        // try {
-        //     await axios.delete(`${API_BASE_URL}/properties/${id}`);
-        //     toast.success("Listing removed successfully.");
-        //     fetchOwnerProperties(); // Refresh array table data logs
-        // } catch (err) {
-        //     toast.error("Failed to delete the selected asset.");
-        // }
+       
     };
 
     const handleUpdatePlaceholder = (property) => {
-        // toast.info(`Redirecting or opening modal context edit for: ${property.title}`);
-        // Wire your modular form layout state modal or routing context here
+        
     };
 
     // Helper method to assign appropriate styles to the administrative verification status
@@ -79,7 +69,7 @@ export default function OwnerPropertiesTable() {
             <div className="max-w-6xl mx-auto space-y-6">
 
                 {/* Section Header */}
-                <div className="bg-base-100 p-6 rounded-3xl border border-base-300 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div className="bg-base-100 p-6 rounded-3xl border border-base-300 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-start gap-4">
                     <div>
                         <h1 className="text-2xl font-black tracking-tight flex items-center gap-2">
                             <Building2 className="text-primary w-6 h-6" /> Managed Listings Portfolio
@@ -88,9 +78,10 @@ export default function OwnerPropertiesTable() {
                             Logged-in Owner: <span className="text-primary font-bold">{currentOwnerEmail}</span>
                         </p>
                     </div>
-                    <button onClick={fetchOwnerProperties} className="btn btn-sm btn-outline rounded-xl font-bold gap-1 normal-case">
-                        <RefreshCw className="w-3.5 h-3.5" /> Reload Real-Time Matrix
-                    </button>
+
+                    <div>
+                        <h2 className="badge badge-xl badge-outline badge-primary tracking-tight ">Total Properties : {properties.length}</h2>
+                   </div>
                 </div>
 
                 {/* Table Layout Container */}
@@ -172,9 +163,9 @@ export default function OwnerPropertiesTable() {
                             </table>
                         </div>
                     </div>
-                )}
-
+                )};
             </div>
         </div>
     );
 }
+

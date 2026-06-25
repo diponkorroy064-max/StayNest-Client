@@ -28,3 +28,21 @@ export const getBookingsByEmail = async (email) => {
 };
 
 
+// 3. Update booking data---
+export const updateBookingStatus = async (bookingId, bookingStatus) => {
+    const res = await fetch(`${BASE_URL}/api/bookings/${bookingId}`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ bookingStatus }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+        throw new Error(data.message);
+    }
+    return data;
+};
+
+

@@ -4,9 +4,8 @@ import { FileCheck, Mail, Phone, Calendar, User, Check, X, ShieldAlert } from "l
 import { toast } from "react-toastify";
 import { useSession } from "@/lib/auth-client";
 import { getAnalyticsByEmail } from "@/lib/api/analytics";
+import { updateBookingStatus } from "@/lib/api/booking";
 
-
-// const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
 export default function BookingRequestsPage() {
     const [requests, setRequests] = useState([]);
@@ -38,16 +37,27 @@ export default function BookingRequestsPage() {
 
 
     const handleActionUpdate = async (bookingId, updatedStatus) => {
-        // try {
-        //     await axios.patch(`${API_BASE_URL}/bookings/${bookingId}`, { status: updatedStatus });
-        //     toast.success(`Application updated to ${updatedStatus} successfully!`);
-        //     fetchRequests(); // Refresh data layout matrix logs
-        // } catch (err) {
-        //     toast.error("Failed modifying entry lifecycle vectors.");
-        // }
+        try {
+            await updateBookingStatus(bookingId, updatedStatus);
+            setRequests((prev) =>
+                prev.map((item) => item._id === bookingId ? {
+                    ...item,
+                    bookingStatus: updatedStatus
+                }
+                    : item)
+            );
+
+            if (updatedStatus === "Approved") {
+                toast.success(`Booking ${updatedStatus.toLowerCase()} successfully`);
+            }
+            else {
+                toast.warning(`Booking ${updatedStatus.toLowerCase()} successfully`);
+            }
+        }
+        catch (err) { toast.error(err.message || "Failed to update booking status.") }
     };
 
-    
+
     if (loading) {
         return (
             <div className="min-h-screen bg-base-200 flex items-center justify-center">
@@ -134,13 +144,14 @@ export default function BookingRequestsPage() {
                                                 </div>
                                             </td>
 
+                                            
                                             {/* Interaction Actions */}
                                             <td className="py-4">
-                                                {req.status === "Approved" ? (
+                                                {req.bookingStatus === "Approved" ? (
                                                     <span className="badge badge-success text-white font-black text-xs px-3 py-2.5 rounded-xl">
                                                         Contract Confirmed
                                                     </span>
-                                                ) : req.status === "Declined" ? (
+                                                ) : req.bookingStatus === "Declined" ? (
                                                     <span className="badge badge-error text-white font-black text-xs px-3 py-2.5 rounded-xl">
                                                         Application Refused
                                                     </span>
