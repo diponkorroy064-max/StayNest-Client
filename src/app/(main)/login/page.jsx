@@ -42,7 +42,6 @@ const SignInPage = () => {
         }
     }
 
-
     const handleSigninGoogle = async () => {
         // const data = await authClient.signIn.social({
         //     provider: "google",
@@ -78,15 +77,13 @@ const SignInPage = () => {
                                 return "Please enter a valid email address";
                             }
                             return null;
-                        }}
-                    >
+                        }}>
                         <Label className="text-gray-700">Email</Label>
 
                         <Input
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900 bg-white focus:ring-2 focus:ring-pink-400 focus:outline-none"
                             placeholder="Enter Your Email"
                         />
-
                         <FieldError />
                     </TextField>
 
@@ -102,8 +99,7 @@ const SignInPage = () => {
                             if (!/[A-Z]/.test(value)) return "Must contain uppercase letter";
                             if (!/[0-9]/.test(value)) return "Must contain number";
                             return null;
-                        }}
-                    >
+                        }}>
                         <Label className="text-gray-700">Password</Label>
 
                         <Input
@@ -116,8 +112,7 @@ const SignInPage = () => {
                         <button
                             type="button"
                             onClick={() => setIsShowPass(!isShowPass)}
-                            className="absolute top-9 right-3 text-gray-500 hover:text-gray-700"
-                        >
+                            className="absolute top-9 right-3 text-gray-500 hover:text-gray-700">
                             {isShowPass ? <FaEyeSlash /> : <FaEye />}
                         </button>
                     </TextField>
@@ -137,8 +132,7 @@ const SignInPage = () => {
                     {/* Button */}
                     <Button
                         className="w-full rounded-lg bg-pink-500 hover:bg-pink-600 text-white font-semibold h-11"
-                        type="submit"
-                    >
+                        type="submit">
                         <Check />
                         Sign In
                     </Button>
@@ -149,7 +143,6 @@ const SignInPage = () => {
                         <span>Or continue with</span>
                         <div className="flex-1 h-px bg-gray-200"></div>
                     </div>
-
                 </Form>
 
                 {/* Google + Signup */}

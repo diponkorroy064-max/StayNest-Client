@@ -2,42 +2,52 @@
 import React, { useEffect, useState } from "react";
 import { FileCheck, Mail, Phone, Calendar, User, Check, X, ShieldAlert } from "lucide-react";
 import { toast } from "react-toastify";
+import { useSession } from "@/lib/auth-client";
+import { getAnalyticsByEmail } from "@/lib/api/analytics";
 
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+// const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
 export default function BookingRequestsPage() {
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const ownerEmail = "diponkor@example.com";
+    const session = useSession();
+    // console.log('session from booking request page', session);
+    const ownerEmail = session?.data?.user?.email;
+    // console.log('Owner Email from booking request page', ownerEmail);
 
-    const fetchRequests = async () => {
-        try {
-            setLoading(true);
-            const response = await axios.get(`${API_BASE_URL}/owner/bookings?email=${ownerEmail}`);
-            setRequests(response.data);
-        } catch (err) {
-            toast.error("Failed to load rental applications queue.");
-        } finally {
-            setLoading(false);
-        }
-    };
 
     useEffect(() => {
+        if (!ownerEmail) return;
+
+        const fetchRequests = async () => {
+            try {
+                setLoading(true);
+                const response = await getAnalyticsByEmail(ownerEmail);
+                // console.log("response from owner booking request page", response);
+                setRequests(response);
+            } catch (err) {
+                toast.error("Failed to load rental applications queue.");
+            } finally {
+                setLoading(false);
+            }
+        };
         fetchRequests();
-    }, []);
+    }, [ownerEmail]);
+
 
     const handleActionUpdate = async (bookingId, updatedStatus) => {
-        try {
-            await axios.patch(`${API_BASE_URL}/bookings/${bookingId}`, { status: updatedStatus });
-            toast.success(`Application updated to ${updatedStatus} successfully!`);
-            fetchRequests(); // Refresh data layout matrix logs
-        } catch (err) {
-            toast.error("Failed modifying entry lifecycle vectors.");
-        }
+        // try {
+        //     await axios.patch(`${API_BASE_URL}/bookings/${bookingId}`, { status: updatedStatus });
+        //     toast.success(`Application updated to ${updatedStatus} successfully!`);
+        //     fetchRequests(); // Refresh data layout matrix logs
+        // } catch (err) {
+        //     toast.error("Failed modifying entry lifecycle vectors.");
+        // }
     };
 
+    
     if (loading) {
         return (
             <div className="min-h-screen bg-base-200 flex items-center justify-center">
@@ -47,11 +57,11 @@ export default function BookingRequestsPage() {
     }
 
     return (
-        <div className="min-h-screen bg-base-200 p-4 md:p-8 text-base-content">
+        <div className="min-h-screen py-4 md:py-8 text-base-content">
             <div className="max-w-6xl mx-auto space-y-6">
 
                 {/* Title Context Header */}
-                <div className="bg-base-100 p-6 rounded-3xl border border-base-300 shadow-sm">
+                <div className="bg-base-100 p-6 rounded-xl border border-base-300 shadow-sm">
                     <h1 className="text-2xl font-black tracking-tight flex items-center gap-2">
                         <FileCheck className="text-primary w-6 h-6" /> Lease Application Pipelines
                     </h1>
@@ -66,7 +76,7 @@ export default function BookingRequestsPage() {
                         No application configurations currently mapped under your properties track.
                     </div>
                 ) : (
-                    <div className="bg-base-100 rounded-3xl border border-base-300 shadow-sm overflow-hidden">
+                    <div className="bg-base-100 rounded-xl border border-base-300 shadow-sm overflow-hidden">
                         <div className="overflow-x-auto">
                             <table className="table table-zebra w-full text-sm">
                                 <thead>
@@ -139,15 +149,14 @@ export default function BookingRequestsPage() {
                                                         <button
                                                             onClick={() => handleActionUpdate(req._id, "Approved")}
                                                             className="btn btn-sm btn-success text-white font-bold normal-case rounded-xl gap-1"
-                                                            title="Authorize System Access"
-                                                        >
+                                                            title="Authorize System Access">
                                                             <Check className="w-4 h-4" /> Accept
                                                         </button>
+
                                                         <button
                                                             onClick={() => handleActionUpdate(req._id, "Declined")}
                                                             className="btn btn-sm btn-outline btn-error font-bold normal-case rounded-xl gap-1"
-                                                            title="Reject Parameter Pipeline"
-                                                        >
+                                                            title="Reject Parameter Pipeline">
                                                             <X className="w-4 h-4" /> Decline
                                                         </button>
                                                     </div>
@@ -164,3 +173,4 @@ export default function BookingRequestsPage() {
         </div>
     );
 }
+
