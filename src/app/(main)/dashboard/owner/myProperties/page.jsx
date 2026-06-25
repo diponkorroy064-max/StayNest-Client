@@ -2,30 +2,29 @@
 import React, { useEffect, useState } from "react";
 import { Edit, Trash2, Building2, MapPin, DollarSign, RefreshCw } from "lucide-react";
 import { toast } from "react-toastify";
+import { useSession } from "@/lib/auth-client";
 import { getPropertyByEmail } from "@/lib/api/properties";
-// import axios from "axios";
+import Image from "next/image";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
 export default function OwnerPropertiesTable() {
     const [properties, setProperties] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // Simulated authentication layer email for the logged-in owner
-    const currentOwnerEmail = "dipu064@gmail.com";
+    const session = useSession();
+    // console.log('session in owner my properties page', session);
+    const currentOwnerEmail = session?.data?.user?.email;
 
-    // import { getPropertyByEmail } from "@/lib/api/api"; // Adjust file location path accordingly
-
+   
     const fetchOwnerProperties = async () => {
+        if (!currentOwnerEmail) return;
+
         try {
             setLoading(true);
-
-            // Call your newly created configuration module method
             const data = await getPropertyByEmail(currentOwnerEmail);
-
+            // console.log('property data in owner my properties page', data);
             setProperties(data);
         } catch (err) {
-            // Automatically catches any 4xx/5xx or network drops thrown by the API file
             toast.error(err.message || "Failed to load inventory assets.");
         } finally {
             setLoading(false);
@@ -33,8 +32,10 @@ export default function OwnerPropertiesTable() {
     };
 
     useEffect(() => {
+        if (!currentOwnerEmail) return;
+
         fetchOwnerProperties();
-    }, []);
+    }, [currentOwnerEmail]);
 
     const handleDelete = async (id) => {
         // if (!window.confirm("Are you sure you want to permanently delete this property listing?")) return;
@@ -107,7 +108,7 @@ export default function OwnerPropertiesTable() {
                                         <th>Location Address</th>
                                         <th>Monthly Rent</th>
                                         <th>Status</th>
-                                        <th className="pr-6 text-right">Actions</th>
+                                        <th className="pr-6 text-center">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -117,7 +118,7 @@ export default function OwnerPropertiesTable() {
                                             <td className="py-4 pl-6">
                                                 <div className="flex items-center gap-3">
                                                     {item.images?.[0] && (
-                                                        <img src={item.images[0]} alt="" className="w-10 h-10 object-cover rounded-xl border border-base-300" />
+                                                        <Image height={48} width={48} src={item.images[0]} alt="Image" className="w-10 h-10 object-cover rounded-xl border border-base-300" />
                                                     )}
                                                     <div>
                                                         <div className="font-extrabold text-base-content max-w-50 truncate">{item.title}</div>
@@ -154,15 +155,13 @@ export default function OwnerPropertiesTable() {
                                                     <button
                                                         onClick={() => handleUpdatePlaceholder(item)}
                                                         className="btn btn-square btn-sm btn-ghost hover:bg-base-200 rounded-lg text-neutral-500"
-                                                        title="Modify Property Parameters"
-                                                    >
+                                                        title="Modify Property Parameters">
                                                         <Edit className="w-4 h-4" />
                                                     </button>
                                                     <button
                                                         onClick={() => handleDelete(item._id)}
                                                         className="btn btn-square btn-sm btn-ghost hover:bg-error/10 rounded-lg text-error"
-                                                        title="Purge From Catalog"
-                                                    >
+                                                        title="Purge From Catalog">
                                                         <Trash2 className="w-4 h-4" />
                                                     </button>
                                                 </div>

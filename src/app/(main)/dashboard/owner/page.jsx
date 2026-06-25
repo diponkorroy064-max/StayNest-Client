@@ -4,13 +4,15 @@ import { BarChart3, Wallet, Users, Home, TrendingUp, ArrowUpRight, DollarSign } 
 import { toast } from "react-toastify";
 import { useSession } from "@/lib/auth-client";
 import { getPropertyByEmail } from "@/lib/api/properties";
+import { getAnalyticsByEmail } from "@/lib/api/analytics";
 
-
-// const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
 export default function OwnerDashboardAnalytics() {
-    const [analytics, setAnalytics] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [totalProperties, setTotalProperties] = useState(0);
+    const [totalBookings, setTotalBookings] = useState(0);
+    const [totalRevenue, setTotalRevenue] = useState(0);
+    const [recentLeaseRequests, setRecentLeaseRequests] = useState([]);
 
     const data = useSession();
     // console.log("data from owner home", data);
@@ -18,54 +20,60 @@ export default function OwnerDashboardAnalytics() {
     // console.log("user from owner home", user);
     const ownerEmail = user?.email;
 
-    const emailData = async () => {
-        const response = await getPropertyByEmail(ownerEmail);
-        // console.log("response", response);
-        return response;
+
+    useEffect(() => {
+        const fetchAnalyticsData = async () => {
+            if (!ownerEmail) return;
+
+            try {
+                setLoading(true);
+                const response = await getPropertyByEmail(ownerEmail);
+                // console.log("response", response);
+                setTotalProperties(response?.length);
+
+                const analyticsData = await getAnalyticsByEmail(ownerEmail);
+                // console.log('analytics', analytics);
+                setTotalBookings(analyticsData?.length);
+                setRecentLeaseRequests(analyticsData);
+
+                let amount = 0;
+                for (const item of analyticsData) {
+                    amount = item.rentAmount + amount;
+                }
+                setTotalRevenue(amount);
+            } catch (err) {
+                toast.error("Failed to load ecosystem metric summaries.");
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchAnalyticsData();
+    }, [ownerEmail]);
+
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-base-200 flex items-center justify-center">
+                <span className="loading loading-spinner loading-lg text-primary"></span>
+            </div>
+        );
     }
-    // emailData();
 
-
-
-
-    // useEffect(() => {
-    //     const fetchAnalyticsData = async () => {
-    //         try {
-    //             setLoading(true);
-    //             const response = await getPropertyByEmail(ownerEmail);
-    //             console.log("response", response);
-    //             setAnalytics(response);
-    //         } catch (err) {
-    //             toast.error("Failed to load ecosystem metric summaries.");
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
-    //     fetchAnalyticsData();
-    // }, []);
-
-
-    // if (loading) {
-    //     return (
-    //         <div className="min-h-screen bg-base-200 flex items-center justify-center">
-    //             <span className="loading loading-spinner loading-lg text-primary"></span>
-    //         </div>
-    //     );
-    // }
-
-    // High performance defaults if response data has sparse fields
     const stats = {
-        totalRevenue: 4850,
+        totalRevenue,
         activeLeases: 3,
-        totalProperties: 5,
-        occupancyRate: 60,
+        totalProperties,
+        totalBookings,
         monthlyTrends: [
-            { month: "Jan", amount: 1200 },
+            { month: "Jan", amount: 1400 },
             { month: "Feb", amount: 1200 },
-            { month: "Mar", amount: 2450 }
+            { month: "Mar", amount: 2450 },
+            { month: "Apr", amount: 1000 },
+            { month: "May", amount: 4500 },
         ],
-        recentLeaseRequests: []
+        recentLeaseRequests
     };
+
 
     return (
         <div className="min-h-screen bg-base-200 p-4 md:p-8 text-base-content">
@@ -108,7 +116,7 @@ export default function OwnerDashboardAnalytics() {
                     <div className="bg-base-100 border border-base-300 p-5 rounded-2xl shadow-sm flex items-center gap-4">
                         <div className="p-3 bg-warning/10 rounded-xl text-warning"><Home className="w-6 h-6" /></div>
                         <div>
-                            <p className="text-xs text-neutral-400 font-bold uppercase tracking-wider">Listed Modules</p>
+                            <p className="text-xs text-neutral-400 font-bold uppercase tracking-wider">Total Property</p>
                             <h3 className="text-2xl font-black">{stats.totalProperties} Units</h3>
                         </div>
                     </div>
@@ -116,12 +124,12 @@ export default function OwnerDashboardAnalytics() {
                     <div className="bg-base-100 border border-base-300 p-5 rounded-2xl shadow-sm flex items-center gap-4">
                         <div className="p-3 bg-info/10 rounded-xl text-info"><ArrowUpRight className="w-6 h-6" /></div>
                         <div>
-                            <p className="text-xs text-neutral-400 font-bold uppercase tracking-wider">Occupancy Rate</p>
-                            <h3 className="text-2xl font-black">{stats.occupancyRate}%</h3>
+                            <p className="text-xs text-neutral-400 font-bold uppercase tracking-wider">Total Booking</p>
+                            <h3 className="text-2xl font-black">{stats.totalBookings} Units</h3>
                         </div>
                     </div>
-
                 </div>
+
 
                 {/* Analytics Split Section */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -151,25 +159,52 @@ export default function OwnerDashboardAnalytics() {
                         </div>
                     </div>
 
+
                     {/* Occupancy Structural Meter */}
                     <div className="bg-base-100 border border-base-300 p-6 rounded-3xl shadow-sm flex flex-col justify-between space-y-4">
                         <div>
-                            <h3 className="text-lg font-black tracking-tight">Space Strategy Allocation</h3>
-                            <p className="text-xs font-semibold text-neutral-400 mt-0.5">Ratio of filled to vacant units.</p>
+                            <h3 className="text-lg font-black tracking-tight">
+                                Space Strategy Allocation
+                            </h3>
+                            <p className="text-xs font-semibold text-neutral-400 mt-0.5">
+                                Ratio of filled to vacant units.
+                            </p>
                         </div>
 
-                        <div className="flex justify-center py-4">
-                            <div className="radial-progress text-primary font-black" style={{ "--value": stats.occupancyRate, "--size": "8rem", "--thickness": "12px" }} role="progressbar">
-                                {stats.occupancyRate}%
-                            </div>
-                        </div>
+                        {(() => {
+                            const occupancyRate = stats.totalProperties > 0 ? Math.round((stats.totalBookings / stats.totalProperties) * 100) : 0;
 
-                        <div className="flex justify-between text-xs font-bold text-neutral-500 bg-base-200 p-3 rounded-xl border border-base-300">
-                            <div>● Occupied: {stats.activeLeases}</div>
-                            <div>○ Available: {stats.totalProperties - stats.activeLeases}</div>
-                        </div>
+                            return (
+                                <>
+                                    <div className="flex justify-center py-4">
+                                        <div className="radial-progress text-primary font-black"
+                                            style={{
+                                                "--value": occupancyRate,
+                                                "--size": "8rem",
+                                                "--thickness": "12px",
+                                            }}
+                                            role="progressbar">
+                                            {occupancyRate}%
+                                        </div>
+                                    </div>
+
+                                    <div className="flex justify-between text-xs font-bold text-neutral-500 bg-base-200 p-3 rounded-xl border border-base-300">
+                                        <div>
+                                            ● Occupied: {stats.totalBookings}
+                                        </div>
+
+                                        <div>
+                                            ○ Available:{" "}
+                                            {Math.max(
+                                                stats.totalProperties - stats.totalBookings,
+                                                0
+                                            )}
+                                        </div>
+                                    </div>
+                                </>
+                            );
+                        })()}
                     </div>
-
                 </div>
 
                 {/* Recent Transaction Application Stream */}
@@ -194,6 +229,7 @@ export default function OwnerDashboardAnalytics() {
                                         <th>Status</th>
                                     </tr>
                                 </thead>
+
                                 <tbody>
                                     {stats.recentLeaseRequests.map((req) => (
                                         <tr key={req._id} className="border-b border-base-200 font-medium">
@@ -216,7 +252,6 @@ export default function OwnerDashboardAnalytics() {
                         </div>
                     )}
                 </div>
-
             </div>
         </div>
     );

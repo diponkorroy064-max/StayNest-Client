@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
+import Link from "next/link";
 
 export default function Banner() {
     return (
@@ -88,13 +89,17 @@ export default function Banner() {
                         animate={{ opacity: 1 }}
                         transition={{ delay: 1 }}
                         className="flex justify-center flex-wrap gap-5 mt-8">
-                        <button className="btn btn-primary btn-lg">
-                            Explore Properties
-                        </button>
+                        <Link href={'/allProperties'}>
+                            <button className="btn btn-primary btn-lg">
+                                Explore Properties
+                            </button>
+                        </Link>
 
-                        <button className="btn btn-outline btn-lg text-white border-white hover:text-black">
-                            List Your Property
-                        </button>
+                        <Link href={'/'}>
+                            <button className="btn btn-outline btn-lg text-white border-white hover:text-black">
+                                List Your Property
+                            </button>
+                        </Link>
                     </motion.div>
 
                     {/* Statistics */}

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { sidebarLinks } from "./SidebarLinks";
+import Logo from "../navbar/Logo";
 
 
 export default function DashboardSidebar({ role = "admin" }) {
@@ -15,7 +16,7 @@ export default function DashboardSidebar({ role = "admin" }) {
     return (
         <>
             {/* Mobile Header */}
-            <header className="lg:hidden sticky top-0 z-40 flex items-center justify-between bg-white border-b px-5 py-4">
+            <header className="lg:hidden sticky top-0 z-10 flex items-center justify-between bg-white border-b px-5 py-4">
                 <h2 className="text-2xl font-bold text-pink-500">
                     StayNest
                 </h2>
@@ -31,11 +32,12 @@ export default function DashboardSidebar({ role = "admin" }) {
             )}
 
             {/* Sidebar */}
-            <aside className={` fixed top-0 left-0 z-50 h-screen w-72 bg-white border-r shadow-lg transition-transform duration-300 ${open ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:z-30`}>
+            <aside className={` fixed top-0 left-0 z-500 h-screen w-72 bg-white border-r shadow-lg transition-transform duration-300 ${open ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:z-30`}>
 
                 {/* Logo */}
-                <div className="flex items-center justify-between border-b p-6">
-                    <h1 className="text-3xl font-bold text-pink-500"> StayNest</h1>
+                <div className="flex items-center justify-between border-b p-5">
+                    {/* <h1 className="text-3xl font-bold text-pink-500"> StayNest</h1> */}
+                    <Logo />
 
                     <button className="lg:hidden" onClick={() => setOpen(false)}>
                         <X />

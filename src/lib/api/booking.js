@@ -10,7 +10,7 @@ export const saveBookingInfo = async (bookingData) => {
         body: JSON.stringify(bookingData),
     });
     if (!res.ok) {
-        throw new Error("Failed to booking property");
+        throw new Error("Property already exists in list.");
     }
     return await res.json();
 };

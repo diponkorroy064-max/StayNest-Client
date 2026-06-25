@@ -14,7 +14,7 @@ import {
 const properties = [
     {
         id: 1,
-        title: "Modern Family Apartment",
+        title: "Family Apartment",
         location: "Dhanmondi, Dhaka",
         price: "৳22,000",
         image: "https://i.ibb.co/WvRKD3Zw/flat1.avif",

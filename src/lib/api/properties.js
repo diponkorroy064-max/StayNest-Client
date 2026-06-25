@@ -19,9 +19,9 @@ export const getPropertyId = async (id) => {
 };
 
 export const getPropertyByEmail = async (email) => {
-    const res = await fetch(`${BASE_URL}/properties/byEmail?email=${encodeURIComponent(email)}`);
+    const res = await fetch(`${BASE_URL}/properties/byEmail?email=${email}`);
     const data = await res.json();
-    console.log("getPropertyByEmail", data)
+    // console.log("get Property By Email", data);
     return data;
 }
 

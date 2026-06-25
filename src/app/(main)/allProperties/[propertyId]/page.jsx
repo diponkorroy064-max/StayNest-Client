@@ -90,7 +90,7 @@ export default function PropertyDetailsPrivatePage() {
             router.push("/dashboard/tenant/success");
         }
         catch (err) {
-            toast.error("Failed to store booking confirmation.");
+            toast.error(err.message);
         }
         finally {
             setProcessingBooking(false);
