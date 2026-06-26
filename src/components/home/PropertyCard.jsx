@@ -72,7 +72,7 @@ export default function PropertyCard({ property }) {
                     <h2 className="text-3xl font-bold text-primary">
                         ৳ {property.rentAmount}
                         <span className="text-base font-normal">
-                            /month
+                            /{property.rentType}
                         </span>
                     </h2>
 

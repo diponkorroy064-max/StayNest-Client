@@ -95,7 +95,7 @@ export default function BookingRequestsPage() {
                                         <th>Applicant Summary</th>
                                         <th>Move-in/Target Parameters</th>
                                         <th>Tariff Summary</th>
-                                        <th>Workflow Validation Actions</th>
+                                        <th>Workflow Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>

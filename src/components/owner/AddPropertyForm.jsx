@@ -4,9 +4,11 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { Home, MapPin, DollarSign, BedDouble, Bath, Maximize, Image as ImageIcon, Settings, FileText, CheckCircle2, Plus, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { useSession } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 
 export default function AddPropertyForm() {
+    const router = useRouter();
     const [loading, setLoading] = useState(false);
 
     const standardAmenities = [
@@ -90,6 +92,7 @@ export default function AddPropertyForm() {
             } else {
                 toast.error("Failed to submit property. Try again.");
             }
+            router.push('/dashboard/owner/myProperties');
         }
         catch (error) {
             console.error(error);

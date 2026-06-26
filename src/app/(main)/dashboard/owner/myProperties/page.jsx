@@ -1,15 +1,21 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Edit, Trash2, Building2, MapPin, DollarSign, RefreshCw } from "lucide-react";
+import { Edit, Building2, MapPin, DollarSign, RefreshCw } from "lucide-react";
 import { toast } from "react-toastify";
 import { useSession } from "@/lib/auth-client";
 import { getPropertyByEmail } from "@/lib/api/properties";
 import Image from "next/image";
+import { DeletePropertyModal } from "@/components/owner/myProperties/DeletePropertyModal";
+import UpdatePropertyModal from "@/components/owner/myProperties/UpdatePropertyModal";
 
 
 export default function OwnerPropertiesTable() {
     const [properties, setProperties] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    // const [selectedProperty, setSelectedProperty] = useState(null);
+    // const [isUpdateOpen, setIsUpdateOpen] = useState(false);
+
 
     const session = useSession();
     // console.log('session in owner my properties page', session);
@@ -34,13 +40,9 @@ export default function OwnerPropertiesTable() {
         fetchOwnerProperties();
     }, [currentOwnerEmail]);
 
-
-    const handleDelete = async (id) => {
-       
-    };
-
     const handleUpdatePlaceholder = (property) => {
-        
+        // setSelectedProperty(property);
+        // setIsUpdateOpen(true);
     };
 
     // Helper method to assign appropriate styles to the administrative verification status
@@ -143,18 +145,21 @@ export default function OwnerPropertiesTable() {
                                             {/* Action Items Column */}
                                             <td className="pr-6 text-right py-4">
                                                 <div className="flex justify-end gap-1.5">
-                                                    <button
+                                                    {/* <button
                                                         onClick={() => handleUpdatePlaceholder(item)}
-                                                        className="btn btn-square btn-sm btn-ghost hover:bg-base-200 rounded-lg text-neutral-500"
+                                                        
                                                         title="Modify Property Parameters">
-                                                        <Edit className="w-4 h-4" />
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleDelete(item._id)}
-                                                        className="btn btn-square btn-sm btn-ghost hover:bg-error/10 rounded-lg text-error"
-                                                        title="Purge From Catalog">
-                                                        <Trash2 className="w-4 h-4" />
-                                                    </button>
+                                                        
+                                                    </button> */}
+
+                                                    <UpdatePropertyModal
+                                                        // isOpen={isUpdateOpen}
+                                                        // onOpenChange={setIsUpdateOpen}
+                                                        property={item}
+                                                        // setProperties={setProperties}
+                                                    ></UpdatePropertyModal>
+
+                                                    <DeletePropertyModal item={item} setProperties={setProperties}></DeletePropertyModal>
                                                 </div>
                                             </td>
                                         </tr>
@@ -163,9 +168,9 @@ export default function OwnerPropertiesTable() {
                             </table>
                         </div>
                     </div>
-                )};
+                )}
             </div>
         </div>
-    );
+    )
 }
 
