@@ -9,7 +9,6 @@ export const getPropertiesData = async () => {
     return data;
 }
 
-
 export const getPropertyId = async (id) => {
     const res = await fetch(`${BASE_URL}/api/properties/${id}`);
 
