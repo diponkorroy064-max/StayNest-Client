@@ -24,7 +24,7 @@ export default function NotFound() {
 
                 <p className="text-neutral-500 mt-4 leading-relaxed">
                     Sorry, the page you're looking for doesn't exist, has been
-                    moved, or the URL may be incorrect.
+                    moved, or the URL may be incorrect!
                 </p>
 
                 <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
@@ -38,8 +38,7 @@ export default function NotFound() {
 
                     <button
                         onClick={() => window.history.back()}
-                        className="btn btn-outline rounded-xl px-6 gap-2"
-                    >
+                        className="btn btn-outline rounded-xl px-6 gap-2">
                         <ArrowLeft className="w-4 h-4" />
                         Go Back
                     </button>

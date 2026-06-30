@@ -74,8 +74,13 @@ export const sidebarLinks = {
             icon: Home,
         },
         {
-            name: "Reports",
-            href: "/dashboard/admin/reports",
+            name: "Bookings",
+            href: "/dashboard/admin/bookings",
+            icon: ClipboardList,
+        },
+        {
+            name: "Transactions",
+            href: "/dashboard/admin/transactions",
             icon: ClipboardList,
         },
         {
