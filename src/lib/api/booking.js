@@ -46,3 +46,16 @@ export const updateBookingStatus = async (bookingId, bookingStatus) => {
 };
 
 
+// get all bookings----
+export const getBookings = async () => {
+    const res = await fetch(`${BASE_URL}/bookings`);
+
+    if (!res.ok) {
+        throw new Error("Failed to fetch bookings");
+    }
+
+    return await res.json();
+};
+
+
+
