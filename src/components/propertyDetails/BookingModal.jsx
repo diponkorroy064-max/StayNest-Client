@@ -1,121 +1,142 @@
+"use client";
 import React, { useState } from "react";
-import { Calendar, User, Phone, FileText, CreditCard, ShieldCheck } from "lucide-react";
+import { Modal, Button, Input, TextField, Label, Surface } from "@heroui/react";
+import { Calendar, User, Phone, FileText } from "lucide-react";
+import { useRouter } from "next/navigation";
+// import { saveBookingInfo } from "@/lib/api/booking";
+import { toast } from "react-toastify";
 
-export default function BookingModal({ isOpen, onClose, property, currentUser, onConfirm, processing }) {
-    // console.log('property from modal', property);
 
-    const [showPaymentView, setShowPaymentView] = useState(false);
+export default function BookingModal({ property, currentUser }) {
+    const router = useRouter();
+
     const [moveInDate, setMoveInDate] = useState("");
     const [contactNumber, setContactNumber] = useState("");
     const [additionalNotes, setAdditionalNotes] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    if (!isOpen) return null;
-
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
-        setShowPaymentView(true);
-    };
+        try {
+            setIsSubmitting(true);
 
-    const handlePaymentSubmit = (e) => {
-        e.preventDefault();
-        onConfirm({ moveInDate, contactNumber, additionalNotes });
+            // const bookingRecord = {
+            //     propertyId: property?._id,
+            //     title: property?.title,
+            //     payAmount: property?.rentAmount,
+            //     tenantName: currentUser?.name,
+            //     tenantEmail: currentUser?.email,
+            //     moveInDate,
+            //     bookingDate: new Date().toISOString().split("T")[0],
+            //     contactNumber,
+            //     additionalNotes,
+            //     transactionId: "MOCK_TXN_" + Math.random().toString(36).substr(2, 9).toUpperCase(),
+            //     paymentStatus: "Unpaid",
+            //     bookingStatus: "Confirmed",
+            //     bookingDate: new Date().toISOString().split('T')[0]
+            // };
+
+            // await saveBookingInfo(bookingRecord);
+            toast.success("Booking info. Recorded!");
+            // router.push(`/dashboard/tenant/payment?amount=${property.rentAmount}&propertyId=${property._id}&title=${property.title}`);
+           
+            router.push(`/dashboard/tenant/payment?amount=${property.rentAmount}&propertyId=${property._id}&title=${property.title}&moveInDate=${moveInDate}&contactNumber=${contactNumber}&additionalNotes=${additionalNotes}`);
+        }
+        catch (err) {
+            toast.error(err.message || "Failed to record booking info.");
+        }
+        finally {
+            setIsSubmitting(false);
+        }
     };
 
 
     return (
-        <div className="modal modal-open bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 fixed inset-0">
-            <div className="modal-box bg-base-100 border border-base-300 rounded-3xl max-w-md p-6 relative shadow-2xl">
-                <button onClick={() => { onClose(); setShowPaymentView(false)}} className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 font-black">
-                    ✕
-                </button>
+        <Modal>
+            <Button className="btn btn-primary mt-3 px-8 rounded-xl font-bold normal-case shadow-md hover:btn-secondary">
+                Book Property Now
+            </Button>
 
-                {!showPaymentView ? (
-                    /* STEP 1: BOOKING FORM */
-                    <form onSubmit={handleFormSubmit} className="space-y-4">
-                        <h3 className="text-xl font-black border-b pb-3 flex items-center gap-2">
-                            <Calendar className="w-5 h-5 text-primary" /> Application Form
-                        </h3>
+            <Modal.Backdrop>
+                <Modal.Container placement="auto">
+                    <Modal.Dialog>
+                        <Modal.Header>
+                            <Modal.Icon className="flex justify-between items-center w-full">
+                                <div className="bg-primary/10 text-primary p-2 rounded-full">
+                                    <Calendar className="w-5 h-5" />
+                                </div>
+                                <Modal.CloseTrigger className="size-9 rounded-full" />
+                            </Modal.Icon>
 
-                        <div className="form-control">
-                            <label className="label py-1"><span className="label-text font-bold text-neutral-500">User Info</span></label>
-                            <div className="input input-bordered flex items-center gap-2 rounded-xl bg-base-200 font-bold text-sm select-none">
-                                <User className="w-4 h-4 text-neutral-400"/> {currentUser.name} ({currentUser.email})
-                            </div>
-                        </div>
+                            <Modal.Heading>
+                                Booking Application Form
+                            </Modal.Heading>
+                        </Modal.Header>
 
-                        <div className="form-control">
-                            <label className="label py-1"><span className="label-text font-bold text-neutral-500">Move-In Date</span></label>
-                            <input type="date" required value={moveInDate} onChange={(e) => setMoveInDate(e.target.value)} className="input input-bordered rounded-xl font-medium" />
-                        </div>
+                        <Modal.Body className="p-6">
+                            <Surface variant="default" className="p-4 rounded-xl">
+                                <form onSubmit={handleFormSubmit} className="flex flex-col gap-4">
 
-                        <div className="form-control">
-                            <label className="label py-1"><span className="label-text font-bold text-neutral-500">Contact Number</span></label>
-                            <div className="relative">
-                                <Phone className="w-4 h-4 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                                <input type="tel" required placeholder="Contact phone number..." value={contactNumber} onChange={(e) => setContactNumber(e.target.value)} className="input input-bordered w-full pl-9 rounded-xl font-medium" />
-                            </div>
-                        </div>
+                                    {/* Tenant Context Read-Only Display Segment */}
+                                    <div className="flex flex-col gap-1.5 bg-base-200/50 p-3 rounded-xl border border-base-300">
+                                        <Label className="font-bold text-gray-400 text-xs flex items-center gap-1.5">
+                                            <User className="w-3.5 h-3.5" /> User Profile Info
+                                        </Label>
+                                        <span className="text-sm font-semibold text-gray-700 truncate">
+                                            {currentUser?.name} ({currentUser?.email})
+                                        </span>
+                                    </div>
 
-                        <div className="form-control">
-                            <label className="label py-1"><span className="label-text font-bold text-neutral-500">Additional Notes</span></label>
-                            <div className="relative">
-                                <FileText className="w-4 h-4 text-neutral-400 absolute left-3 top-3" />
-                                <textarea placeholder="Specify any unique details..." value={additionalNotes} onChange={(e) => setAdditionalNotes(e.target.value)} className="textarea textarea-bordered w-full pl-9 rounded-xl min-h-17.5 focus:outline-primary font-medium"/>
-                            </div>
-                        </div>
+                                    {/* Move-In Date Fields Vector Configuration Mapping */}
+                                    <TextField variant="secondary">
+                                        <Label className="font-bold text-gray-700">Move-In Date</Label>
+                                        <Input
+                                            type="date"
+                                            required
+                                            value={moveInDate}
+                                            onChange={(e) => setMoveInDate(e.target.value)}
+                                        />
+                                    </TextField>
 
-                        <button type="submit" className="btn btn-primary btn-block rounded-xl font-bold normal-case shadow-md">
-                            Proceed to Payment UI
-                        </button>
-                    </form>
-                ) : (
-                    /* STEP 2: PAYMENT OVERVIEW */
-                    <form onSubmit={handlePaymentSubmit} className="space-y-5">
-                        <h3 className="text-xl font-black border-b pb-3 flex items-center gap-2">
-                            <CreditCard className="w-5 h-5 text-primary" /> Checkout Portal
-                        </h3>
+                                    {/* Primary Contact Liaison Phone Input Layout */}
+                                    <TextField variant="secondary">
+                                        <Label className="font-bold text-gray-700">Contact Number</Label>
+                                        <Input
+                                            type="tel"
+                                            required
+                                            placeholder="Contact phone number..."
+                                            value={contactNumber}
+                                            onChange={(e) => setContactNumber(e.target.value)}
+                                        />
+                                    </TextField>
 
-                        <div className="bg-base-200 p-4 border border-base-300 rounded-2xl space-y-2 text-sm">
-                            <div className="flex justify-between">
-                                <span className="text-neutral-400 font-bold">Property:</span>
-                                <span className="font-extrabold max-w-50 truncate">{property.title}</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span className="text-neutral-400 font-bold">Move-in target:</span>
-                                <span className="font-extrabold">{moveInDate}</span>
-                            </div>
-                            <div className="flex justify-between border-t border-base-300 pt-2 text-md font-black text-primary">
-                                <span>Total Due:</span> <span>${property.rentAmount}</span>
-                            </div>
-                        </div>
+                                    {/* Additional Specifications Textarea Element Block Mapping */}
+                                    <div className="flex flex-col gap-1">
+                                        <Label className="font-bold text-gray-700 text-sm">Additional Notes</Label>
+                                        <textarea
+                                            placeholder="Specify any unique request details..."
+                                            value={additionalNotes}
+                                            onChange={(e) => setAdditionalNotes(e.target.value)}
+                                            className="w-full border border-gray-200 rounded-lg p-2.5 text-sm font-medium bg-secondary/10 focus:outline-primary min-h-21.25 transition-all"
+                                        />
+                                    </div>
 
-                        <div className="space-y-3">
-                            <div className="form-control">
-                                <label className="label py-0.5"><span className="label-text font-bold text-neutral-500 text-xs">Cardholder Name</span></label>
-                                <input type="text" defaultValue={currentUser.name} className="input input-bordered input-sm rounded-xl font-medium bg-base-100" placeholder="John Doe" required />
-                            </div>
-                            <div className="form-control">
-                                <label className="label py-0.5"><span className="label-text font-bold text-neutral-500 text-xs">Card Details (UI Placeholder)</span></label>
-                                <input type="text" className="input input-bordered input-sm rounded-xl font-medium" placeholder="4242 •••• •••• 4242" maxLength={16} required />
-                            </div>
-                            <div className="grid grid-cols-2 gap-3">
-                                <input type="text" className="input input-bordered input-sm rounded-xl font-medium text-center" placeholder="MM / YY" maxLength={5} required />
-                                <input type="password" className="input input-bordered input-sm rounded-xl font-medium text-center" placeholder="CVC" maxLength={3} required />
-                            </div>
-                        </div>
+                                    {/* Footer buttons section containing operational action switches */}
+                                    <Modal.Footer className="mt-2 pt-4 border-t border-gray-100">
+                                        <Button variant="secondary" slot="close" type="button">
+                                            Cancel
+                                        </Button>
 
-                        <button type="submit" disabled={processing} className="btn btn-primary btn-block rounded-xl normal-case font-bold text-white shadow-md">
-                            {processing ? <span className="loading loading-spinner"></span> :`Confirm Payment of $${property.rentAmount}`}
-                        </button>
-
-                        <div className="flex items-start gap-2 bg-base-200 p-3 rounded-xl text-[11px] text-neutral-500 leading-relaxed">
-                            <ShieldCheck className="w-4 h-4 text-success shrink-0 mt-0.5" />
-                            <p>This layout is running in local UI mode. Integration gateway routes can step directly into this action layer later.</p>
-                        </div>
-                    </form>
-                )}
-            </div>
-        </div>
+                                        <Button color="primary" type="submit" className="font-bold">
+                                            Confirm Booking
+                                        </Button>
+                                    </Modal.Footer>
+                                </form>
+                            </Surface>
+                        </Modal.Body>
+                    </Modal.Dialog>
+                </Modal.Container>
+            </Modal.Backdrop>
+        </Modal>
     );
 }
-

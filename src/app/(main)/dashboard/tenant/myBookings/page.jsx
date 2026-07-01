@@ -122,7 +122,7 @@ export default function TenantBookingsPage() {
                                             {/* Amount Paid Column */}
                                             <td>
                                                 <div className="font-black text-primary flex items-center">
-                                                    <DollarSign className="w-3.5 h-3.5 -mr-0.5" />{book.rentAmount || book.amountPaid || "0"}
+                                                    <DollarSign className="w-3.5 h-3.5 -mr-0.5" />{book.rentAmount || book.payAmount || "0"}
                                                 </div>
                                             </td>
 

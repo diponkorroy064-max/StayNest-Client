@@ -10,7 +10,6 @@ import { getPropertyId } from "@/lib/api/properties";
 import { useSession } from "@/lib/auth-client";
 import Image from "next/image";
 import { addFavouriteProperty } from "@/lib/api/favourites";
-import { saveBookingInfo } from "@/lib/api/booking";
 import { getPropertyReviews, submitReview } from "@/lib/api/review";
 
 
@@ -70,31 +69,7 @@ export default function PropertyDetailsPrivatePage() {
     const handleBookingConfirmation = async (bookingDetails) => {
         // console.log('bookingDetails', bookingDetails);
 
-        try {
-            setProcessingBooking(true);
-            const structuralRecord = {
-                propertyId,
-                title: property.title,
-                rentAmount: property.rentAmount,
-                tenantName: currentUser.name,
-                tenantEmail: currentUser.email,
-                ...bookingDetails,
-                transactionId: "MOCK_TXN_" + Math.random().toString(36).substr(2, 9).toUpperCase(),
-                paymentStatus: "Paid"
-            };
-            // console.log("structuralRecord", structuralRecord);
-
-            await saveBookingInfo(structuralRecord);
-            setIsBookModalOpen(false);
-            toast.success("Lease secured perfectly!");
-            router.push("/dashboard/tenant/success");
-        }
-        catch (err) {
-            toast.error(err.message);
-        }
-        finally {
-            setProcessingBooking(false);
-        }
+       
     };
 
     
@@ -147,7 +122,16 @@ export default function PropertyDetailsPrivatePage() {
 
                             <div className="text-right">
                                 <p className="text-3xl font-black text-primary">${property.rentAmount}<span className="text-sm font-semibold text-neutral-400">/{property.rentType || "mo"}</span></p>
-                                <button onClick={() => setIsBookModalOpen(true)} className="btn btn-primary mt-3 px-8 rounded-xl font-bold normal-case shadow-md">Book Property Now</button>
+                                {/* <button onClick={() => setIsBookModalOpen(true)} className="btn btn-primary mt-3 px-8 rounded-xl font-bold normal-case shadow-md">Book Property Now</button> */}
+
+                                <BookingModal
+                                    // isOpen={isBookModalOpen}
+                                    // onClose={() => setIsBookModalOpen(false)}
+                                    property={property}
+                                    currentUser={currentUser}
+                                // onConfirm={handleBookingConfirmation}
+                                // processing={processingBooking}
+                                />
                             </div>
                         </div>
 
@@ -185,13 +169,7 @@ export default function PropertyDetailsPrivatePage() {
                 </div>
 
                 {/* Extracted Booking Flow System Modal Wrapper */}
-                <BookingModal isOpen={isBookModalOpen}
-                    onClose={() => setIsBookModalOpen(false)}
-                    property={property}
-                    currentUser={currentUser}
-                    onConfirm={handleBookingConfirmation}
-                    processing={processingBooking}
-                />
+                
             </div>
         </div>
     );

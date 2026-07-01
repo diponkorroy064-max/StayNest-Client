@@ -1,4 +1,4 @@
-import { LayoutDashboard, Home, PlusCircle, Users, User, Heart, CreditCard, ClipboardList} from "lucide-react";
+import { LayoutDashboard, Home, PlusCircle, Users, User, Heart, CreditCard, ClipboardList, MessageSquareText} from "lucide-react";
 
 export const sidebarLinks = {
     tenant: [
@@ -81,7 +81,7 @@ export const sidebarLinks = {
         {
             name: "Transactions",
             href: "/dashboard/admin/transactions",
-            icon: ClipboardList,
+            icon: MessageSquareText,
         },
         {
             name: "Profile",

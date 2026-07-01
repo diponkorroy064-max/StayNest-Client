@@ -1,4 +1,4 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const getRentalHistoryByEmail = async (email) => {
     // Queries the historical endpoint block securely
