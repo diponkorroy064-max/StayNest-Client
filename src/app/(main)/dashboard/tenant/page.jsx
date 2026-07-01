@@ -122,7 +122,7 @@ export default function TenantDashboardHome() {
                             </p>
 
                             <h3 className="text-2xl font-black">
-                                ৳ {data.totalRentPaid}
+                                ৳ {data.totalRentPaid || 0}
                             </h3>
                         </div>
                     </div>

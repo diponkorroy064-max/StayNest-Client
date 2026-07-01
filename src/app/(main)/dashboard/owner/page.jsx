@@ -38,7 +38,7 @@ export default function OwnerDashboardAnalytics() {
 
                 let amount = 0;
                 for (const item of analyticsData) {
-                    amount = item.rentAmount + amount;
+                    amount = (item.rentAmount || item.payAmount || 0) + amount;
                 }
                 setTotalRevenue(amount);
             } catch (err) {
@@ -239,7 +239,7 @@ export default function OwnerDashboardAnalytics() {
                                             </td>
                                             <td className="font-bold max-w-50 truncate">{req.title}</td>
                                             <td>{req.moveInDate}</td>
-                                            <td className="font-black text-primary">${req.rentAmount}</td>
+                                            <td className="font-black text-primary">৳{req.rentAmount || req.payAmount || "0"}</td>
                                             <td>
                                                 <span className="badge badge-success text-white font-bold text-xs py-2 rounded-md">
                                                     {req.paymentStatus}

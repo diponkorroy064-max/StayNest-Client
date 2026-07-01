@@ -36,7 +36,7 @@ export default function AdminAllBookingsPage() {
             (booking.email?.toLowerCase() || "").includes(search.toLowerCase())
         );
     });
-    console.log('bookings', bookings);
+    // console.log('bookings', bookings);
 
     const bookingBadge = (status) => {
         switch (status) {

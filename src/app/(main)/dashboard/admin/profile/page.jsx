@@ -4,6 +4,7 @@ import { User, Mail, Phone, ShieldCheck, MapPin, Save, Landmark } from "lucide-r
 import { toast } from "react-toastify";
 import { useSession } from "@/lib/auth-client";
 import { getUserProfile, updateUserProfile } from "@/lib/api/users";
+import { Avatar } from "@heroui/react";
 
 
 export default function TenantProfilePage() {
@@ -54,7 +55,7 @@ export default function TenantProfilePage() {
         }
     };
 
-    
+
     if (isPending || !profile) {
         return (
             <div className="min-h-screen flex justify-center items-center bg-base-200">
@@ -71,11 +72,13 @@ export default function TenantProfilePage() {
                 {/* Profile Accent Banner */}
                 <div className="bg-linear-to-r from-primary to-primary/80 h-32 px-6 flex items-end justify-between pb-4">
                     <div className="flex items-center gap-4 translate-y-8">
-                        <div className="avatar">
-                            <div className="w-16 h-16 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                                <img src={profile?.image || "https://placehold.co/150"} alt={profile?.name} />
-                            </div>
-                        </div>
+                        <Avatar className="size-16">
+                            <Avatar.Image
+                                alt="Extra Large"
+                                src={profile?.image}
+                            />
+                            <Avatar.Fallback>XL</Avatar.Fallback>
+                        </Avatar>
 
                         <div className="mb-2 lg:mb-0">
                             <h2 className="text-xl font-black text-base-content md:text-neutral-content">{profile?.name}</h2>

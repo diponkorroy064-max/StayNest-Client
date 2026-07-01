@@ -51,7 +51,7 @@ export default function BookingRequestsPage() {
                 toast.success(`Booking ${updatedStatus.toLowerCase()} successfully`);
             }
             else {
-                toast.warning(`Booking ${updatedStatus.toLowerCase()} successfully`);
+                toast.warning(`Booking ${updatedStatus.toLowerCase()}`);
             }
         }
         catch (err) { toast.error(err.message || "Failed to update booking status.") }
@@ -94,7 +94,7 @@ export default function BookingRequestsPage() {
                                         <th>Asset Specification</th>
                                         <th>Applicant Summary</th>
                                         <th>Move-in/Target Parameters</th>
-                                        <th>Tariff Summary</th>
+                                        <th>Tariff</th>
                                         <th>Workflow Actions</th>
                                     </tr>
                                 </thead>
@@ -138,9 +138,9 @@ export default function BookingRequestsPage() {
 
                                             {/* Cost Summary */}
                                             <td className="py-4">
-                                                <div className="text-md font-black text-primary">${req.rentAmount}</div>
+                                                <div className="text-md font-black text-primary">৳{req.rentAmount || req.payAmount || "0"}</div>
                                                 <div className="badge badge-success text-white font-bold text-[10px] mt-1 rounded px-1.5 py-0.5">
-                                                    {req.paymentStatus || "Paid"}
+                                                    {req.paymentStatus || "Unpaid"}
                                                 </div>
                                             </td>
 

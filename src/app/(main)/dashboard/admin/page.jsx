@@ -1,79 +1,47 @@
 "use client";
-import {
-    Users,
-    Building2,
-    CalendarDays,
-    BadgeCheck,
-    Clock3,
-    Wallet,
-    TrendingUp,
-} from "lucide-react";
+import { getAdminAnalytics } from "@/lib/api/admin";
+import { Users, Building2, CalendarDays, BadgeCheck, Clock3, Wallet, TrendingUp } from "lucide-react";
+import { useEffect, useState } from "react";
+
 
 export default function AdminHomePage() {
-    // Replace with API data later
-    const stats = {
-        totalUsers: 248,
-        totalProperties: 92,
-        totalBookings: 71,
-        totalRevenue: 875000,
-        approvedProperties: 63,
-        pendingProperties: 29,
-    };
+    const [stats, setStats] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    const recentBookings = [
-        {
-            id: 1,
-            tenant: "John Doe",
-            property: "Modern Apartment",
-            amount: 25000,
-        },
-        {
-            id: 2,
-            tenant: "Alice",
-            property: "Luxury Villa",
-            amount: 65000,
-        },
-        {
-            id: 3,
-            tenant: "Rahim",
-            property: "Family House",
-            amount: 30000,
-        },
-    ];
+    useEffect(() => {
+        const fetchAnalytics = async () => {
+            try {
+                const data = await getAdminAnalytics();
+                setStats(data);
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchAnalytics();
+    }, []);
+    console.log("stats", stats);
 
-    const recentUsers = [
-        {
-            id: 1,
-            name: "John Doe",
-            role: "Tenant",
-        },
-        {
-            id: 2,
-            name: "Sarah",
-            role: "Owner",
-        },
-        {
-            id: 3,
-            name: "Alex",
-            role: "Tenant",
-        },
-    ];
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex justify-center items-center">
+                <span className="loading loading-spinner loading-lg"></span>
+            </div>
+        );
+    }
+
 
     return (
         <div className="min-h-screen bg-base-200 p-6">
             <div className="max-w-7xl mx-auto space-y-8">
 
                 {/* Header */}
-
                 <div className="bg-base-100 rounded-3xl p-6 shadow border border-base-300 flex justify-between items-center">
                     <div>
-                        <h1 className="text-3xl font-black">
-                            Admin Dashboard
-                        </h1>
-
-                        <p className="text-sm text-gray-500 mt-2">
-                            Monitor your StayNest platform statistics.
-                        </p>
+                        <h1 className="text-3xl font-black">Admin Dashboard</h1>
+                        <p className="text-sm text-gray-500 mt-2">Monitor your StayNest platform statistics.</p>
                     </div>
 
                     <div className="badge badge-success badge-lg gap-2">
@@ -83,7 +51,6 @@ export default function AdminHomePage() {
                 </div>
 
                 {/* Statistics */}
-
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
 
                     <div className="card bg-base-100 shadow border border-base-300">
@@ -116,7 +83,7 @@ export default function AdminHomePage() {
                             <div>
                                 <p>Total Bookings</p>
                                 <h2 className="text-3xl font-bold">
-                                    {stats.totalBookings}
+                                    {stats.recentBookings?.length}
                                 </h2>
                             </div>
                         </div>
@@ -161,11 +128,9 @@ export default function AdminHomePage() {
                 </div>
 
                 {/* Tables */}
-
                 <div className="grid lg:grid-cols-2 gap-6">
 
                     {/* Recent Bookings */}
-
                     <div className="bg-base-100 rounded-3xl shadow border border-base-300">
 
                         <div className="p-5 border-b border-base-300">
@@ -175,41 +140,29 @@ export default function AdminHomePage() {
                         </div>
 
                         <div className="overflow-x-auto">
-
                             <table className="table">
-
                                 <thead>
-
                                     <tr>
                                         <th>Tenant</th>
                                         <th>Property</th>
                                         <th>Amount</th>
                                     </tr>
-
                                 </thead>
 
                                 <tbody>
-
-                                    {recentBookings.map((booking) => (
-                                        <tr key={booking.id}>
-                                            <td>{booking.tenant}</td>
-                                            <td>{booking.property}</td>
-                                            <td className="font-bold text-primary">
-                                                ৳ {booking.amount}
-                                            </td>
+                                    {stats.recentBookings.map((booking) => (
+                                        <tr key={booking._id}>
+                                            <td>{booking.tenantName || "User"}</td>
+                                            <td>{booking.propertyName || booking.title}</td>
+                                            <td className="font-bold text-primary">৳ {booking.amount || booking.payAmount || rentAmount}</td>
                                         </tr>
                                     ))}
-
                                 </tbody>
-
                             </table>
-
                         </div>
-
                     </div>
 
                     {/* Recent Users */}
-
                     <div className="bg-base-100 rounded-3xl shadow border border-base-300">
 
                         <div className="p-5 border-b border-base-300">
@@ -219,43 +172,31 @@ export default function AdminHomePage() {
                         </div>
 
                         <div className="overflow-x-auto">
-
                             <table className="table">
-
                                 <thead>
-
                                     <tr>
                                         <th>Name</th>
+                                        <th>Email</th>
                                         <th>Role</th>
                                     </tr>
-
                                 </thead>
 
                                 <tbody>
-
-                                    {recentUsers.map((user) => (
-                                        <tr key={user.id}>
-                                            <td>{user.name}</td>
-
-                                            <td>
-                                                <span className="badge badge-primary">
-                                                    {user.role}
-                                                </span>
+                                    {stats.recentUsers.map((user) => (
+                                        <tr key={user._id}>
+                                            <td><span className="font-bold">{user.name}</span></td>
+                                            <td>{user.email}</td>
+                                            <td><span className="badge badge-outline badge-primary">{user.role}</span>
                                             </td>
                                         </tr>
                                     ))}
-
                                 </tbody>
-
                             </table>
-
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
         </div>
     );
 }
+

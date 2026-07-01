@@ -3,21 +3,23 @@ import React, { useEffect, useState } from "react";
 import { History, Calendar, DollarSign, RefreshCw, FileText, CheckCircle2, ShieldCheck } from "lucide-react";
 import { toast } from "react-toastify";
 import { useSession } from "@/lib/auth-client";
+import { getBookingsByEmail } from "@/lib/api/booking";
 
-// Update this path to match your API directory configuration setup
-// import { getRentalHistoryByEmail } from "@/lib/api/history";
 
 export default function TenantBookingHistoryPage() {
     const [historyLogs, setHistoryLogs] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const session = useSession();
-    const currentUserEmail = session?.data?.user?.email || "diponkor@example.com";
+    const currentUserEmail = session?.data?.user?.email || "example@example.com";
+    const currentUserRole = session?.data?.user?.role || "user";
 
     const fetchHistory = async () => {
         try {
             setLoading(true);
-            const data = await getRentalHistoryByEmail(currentUserEmail);
+            const data = await getBookingsByEmail(currentUserEmail);
+            // console.log("Rental history data fetched:", data);
+
             setHistoryLogs(data || []);
         } catch (err) {
             toast.error(err.message || "Failed to load rental history archives.");
@@ -32,8 +34,8 @@ export default function TenantBookingHistoryPage() {
         }
     }, [currentUserEmail]);
 
-    // Calculate quick metrics based on historical listings array data
-    const totalSpent = historyLogs.reduce((acc, curr) => acc + Number(curr.rentAmount || 0), 0);
+    // Calculate quick metrics based on historical listings array data--
+    const totalSpent = historyLogs.reduce((acc, curr) => acc + Number(curr.payAmount || curr.rentAmount || 0), 0);
     const totalStays = historyLogs.filter(log => log.bookingStatus?.toLowerCase() === "completed").length;
 
     if (loading) {
@@ -44,6 +46,7 @@ export default function TenantBookingHistoryPage() {
         );
     }
 
+    
     return (
         <div className="min-h-screen bg-base-200 p-4 md:p-8 text-base-content">
             <div className="max-w-5xl mx-auto space-y-6">
@@ -55,7 +58,7 @@ export default function TenantBookingHistoryPage() {
                             <History className="text-primary w-6 h-6" /> Rental Activity History
                         </h1>
                         <p className="text-sm font-semibold text-neutral-400 mt-0.5">
-                            Archived statement parameters matching user: <span className="text-primary font-bold">{currentUserEmail}</span>
+                            Archived statement parameters matching user(<span className="text-red-500 font-bold">{currentUserRole}</span>): <span className="text-primary font-bold">{currentUserEmail}</span>
                         </p>
                     </div>
                     <button onClick={fetchHistory} className="btn btn-sm btn-outline rounded-xl font-bold gap-1 normal-case">
@@ -71,7 +74,7 @@ export default function TenantBookingHistoryPage() {
                         </div>
                         <div>
                             <p className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Total Investment Logs</p>
-                            <h3 className="text-2xl font-black text-base-content mt-0.5">${totalSpent.toLocaleString()}</h3>
+                            <h3 className="text-2xl font-black text-base-content mt-0.5">৳{totalSpent.toLocaleString()}</h3>
                         </div>
                     </div>
 
@@ -133,7 +136,7 @@ export default function TenantBookingHistoryPage() {
                                             {/* Amount Paid Column */}
                                             <td>
                                                 <div className="font-black text-primary flex items-center">
-                                                    <DollarSign className="w-3.5 h-3.5 -mr-0.5" />{log.rentAmount || "0"}
+                                                    ৳{log.payAmount || log.rentAmount || "0"}
                                                 </div>
                                             </td>
 
@@ -151,7 +154,6 @@ export default function TenantBookingHistoryPage() {
                                                     <ShieldCheck className="w-4 h-4 text-success shrink-0" /> Verified Settlement
                                                 </div>
                                             </td>
-
                                         </tr>
                                     ))}
                                 </tbody>

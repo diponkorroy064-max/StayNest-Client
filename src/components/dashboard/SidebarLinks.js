@@ -46,7 +46,7 @@ export const sidebarLinks = {
             icon: Home,
         },
         {
-            name: "Requests",
+            name: "Booking Requests",
             href: "/dashboard/owner/booking-requests",
             icon: ClipboardList,
         },
